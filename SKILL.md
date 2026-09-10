@@ -54,6 +54,8 @@ Include consequential side effects or failure behavior when useful.
 Do not merely restate a signature or put review findings, proposed changes, or repository policy into a summary.
 Do not infer an implementation from a declaration alone.
 
+After changing behavior that may affect callers, dependencies, shared interfaces, or cross-file control flow, use the structural graph to check the affected neighborhood before considering the implementation complete. Prefer targeted traversal from the changed symbols; do not perform this check mechanically after every edit.
+
 After substantial code changes, run a normal `graft build` before selecting the changed or moved symbols.
 Refresh summaries for affected stale symbols and newly understood definitions; keep unrelated cached summaries intact.
 Once selected, retain the node ID, body hash, source hash, and prior summary state in the payload while authoring the summary.
