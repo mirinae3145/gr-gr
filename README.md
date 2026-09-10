@@ -16,10 +16,47 @@ The experiments highlighted an opportunity to retain understanding gained from r
 `gr-gr` packages that workflow as a reusable skill and automates the mechanical update steps.
 File summaries and concept maps remain the responsibility of Graft's native deep enrichment.
 
-## Usage
+## Recommended global configuration
 
-See [SKILL.md](SKILL.md) for the workflow and helper commands.
-The helper requires Python 3.9 or later and uses only the standard library.
+This section is user-responsibility, not AI's.
+
+Do not run `graft init` things; instead, apply the following snippet or equivalent form based on your environment and agent.
+
+```toml
+[mcp_servers.graft]
+command = "graft"
+args = ["mcp"]
+```
+
+Example above is for Codex (`~/.codex/config.toml`).
+
+### Linux
+
+Add below in the shell environment (e.g., `~/.profile`).
+
+```bash
+export GRAFT_NO_GITIGNORE=1
+export GRAFT_NO_IGNORE=1
+```
+
+Then run:
+
+```bash
+mkdir -p ~/.config/git
+printf '/graft/\n' >> ~/.config/git/ignore
+```
+
+### Windows
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.config\git" | Out-Null
+Add-Content "$HOME\.config\git\ignore" "/graft/"
+
+git config --global core.excludesFile "$HOME/.config/git/ignore"
+
+[Environment]::SetEnvironmentVariable("GRAFT_NO_GITIGNORE", "1", "User")
+[Environment]::SetEnvironmentVariable("GRAFT_NO_IGNORE", "1", "User")
+```
 
 ## AI assistance
 
