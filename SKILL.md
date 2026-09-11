@@ -11,6 +11,12 @@ The incremental path maintains symbol summaries through the helper.
 For API-backed semantic enrichment, rely on Graft's native `graft build --deep`, including its file summaries, concept maps, and crux generation.
 This skill does not define a separate strategy for judging or authoring those broader artifacts, and does not replace Graft's API implementation.
 
+## Graft versions
+
+Basic operation was confirmed through practical use with Graft 0.16.0.
+Graft 0.18.0 was reviewed for compatibility at the code level, without an end-to-end run.
+These observations are not a compatibility guarantee; retain the schema and hash checks below when using either version or a newer release.
+
 ## Choose context economically
 
 When first orienting in an unfamiliar indexed repository, run `graft map`.

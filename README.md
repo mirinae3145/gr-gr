@@ -3,6 +3,12 @@
 `gr-gr` is a coding-agent skill for finding relevant code through an existing Graft index and preserving useful understanding as symbol summaries.
 It combines targeted code retrieval with incremental enrichment during ordinary development work.
 
+## Graft versions
+
+This skill was developed with Graft 0.16.0, with basic operation confirmed through practical use.
+The 0.18.0 release was reviewed against 0.16.0 for compatibility; no breaking changes were found in the commands or summary-storage behavior this skill relies on, but an end-to-end run was not performed.
+These observations are not a compatibility guarantee.
+
 ## Purpose
 
 Help agents choose the right Graft query, avoid redundant source reading, and reuse summaries grounded in implementations they have inspected.
