@@ -33,7 +33,10 @@ When the relevant symbol or file is already known, use the matching targeted pri
 
 Use one retrieval that fits the current need, then act on its result.
 Do not repeatedly rephrase an unsuccessful `ask`; switch to exhaustive search, structural traversal, or the precise source range that is missing.
-Use `--in <scope>/` when a workspace contains multiple relevant projects.
+With Graft 0.18.0, use `--in <scope>/` only with `graft ask`, `graft grep`, or `graft callers` to narrow results to a repo-relative path prefix.
+`graft map` does not support `--in`: run `graft map [repo-root]` for an overview of the existing index. Its optional repository-root argument is not a path-prefix filter.
+`graft skeleton` does not support `--in`: pass the repo-relative file path as `<file>` instead.
+Do not assume options are shared across subcommands; check `graft <command> --help` when unsure.
 Use `--full` or read the referenced source range when a compact excerpt is insufficient; do not reopen a whole file merely to recover code already returned.
 Ranked retrieval is not exhaustive, and graph edges are derived evidence rather than proof of runtime dispatch.
 Resolve declaration/implementation duplicates by path, node ID, and source span, not by name alone.
