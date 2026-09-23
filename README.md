@@ -16,7 +16,8 @@ The included helper validates and applies summary updates without changing the g
 An API key is optional: agents can maintain symbol summaries themselves, while broader API-backed enrichment uses Graft's native `graft build --deep`.
 
 On first use of a repository in each agent session and after a branch switch, the skill refreshes an existing index with `graft build` before using it.
-If no index exists, the agent explicitly reports this and continues with ordinary source search; the skill does not create an index without user authorization.
+Running or recommending `graft init` is prohibited.
+If no index exists, the agent explicitly reports this and continues with ordinary source search without creating an index, suggesting creation, or requesting initialization permission.
 These refreshes reduce unnoticed stale structural state but do not regenerate stale semantic summaries.
 
 ## Development background

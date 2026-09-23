@@ -21,7 +21,8 @@ These observations are not a compatibility guarantee; retain the schema and hash
 
 At the start of each agent session, on first use of each repository or worktree, check for its existing structural index (`graft/.graph/wiring.json`) before any Graft retrieval or enrichment.
 If the index is absent, explicitly tell the user which repository has no Graft index and that work will continue with ordinary file search and source reading without creating one.
-Do not run `graft init` or `graft build` to create a missing index solely because this skill is active; initial indexing requires user authorization.
+Never run or recommend `graft init`.
+When the index is absent, do not run `graft build` to create it, suggest creating it, or ask for permission to initialize it; report its absence and continue the task with ordinary source search.
 
 When the index exists, run a normal `graft build` from that repository before using it, even if no source changes are known to the agent.
 Repeat this check and refresh after switching branches, including a switch detected from outside the agent's own actions, before the next graph use.
