@@ -15,6 +15,10 @@ Help agents choose the right Graft query, avoid redundant source reading, and re
 The included helper validates and applies summary updates without changing the graph's structural data.
 An API key is optional: agents can maintain symbol summaries themselves, while broader API-backed enrichment uses Graft's native `graft build --deep`.
 
+On first use of a repository in each agent session and after a branch switch, the skill refreshes an existing index with `graft build` before using it.
+If no index exists, the agent explicitly reports this and continues with ordinary source search; the skill does not create an index without user authorization.
+These refreshes reduce unnoticed stale structural state but do not regenerate stale semantic summaries.
+
 ## Development background
 
 The skill grew out of experiments with a Graft-based workflow during a refactor of a library.

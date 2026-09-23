@@ -17,6 +17,20 @@ Basic operation was confirmed through practical use with Graft 0.16.0.
 Graft 0.18.0 was reviewed for compatibility at the code level, without an end-to-end run.
 These observations are not a compatibility guarantee; retain the schema and hash checks below when using either version or a newer release.
 
+## Check and refresh the existing index
+
+At the start of each agent session, on first use of each repository or worktree, check for its existing structural index (`graft/.graph/wiring.json`) before any Graft retrieval or enrichment.
+If the index is absent, explicitly tell the user which repository has no Graft index and that work will continue with ordinary file search and source reading without creating one.
+Do not run `graft init` or `graft build` to create a missing index solely because this skill is active; initial indexing requires user authorization.
+
+When the index exists, run a normal `graft build` from that repository before using it, even if no source changes are known to the agent.
+Repeat this check and refresh after switching branches, including a switch detected from outside the agent's own actions, before the next graph use.
+Track the checkout's branch and HEAD with the last successful refresh so a branch change can be detected when resuming repository work.
+Apply the missing-index rule again if the destination checkout has no index.
+These refreshes reduce unnoticed stale structural state; they do not regenerate stale semantic summaries or replace the helper's schema and hash checks.
+Use ordinary `graft build`, not `--deep`, for these refreshes, and do not overlap a build with another build or summary application in the same checkout.
+If Graft is unavailable or the build fails, report that the index could not be refreshed and continue with ordinary file search and source reading rather than treating the old graph as current.
+
 ## Choose context economically
 
 When first orienting in an unfamiliar indexed repository, run `graft map`.
@@ -44,7 +58,6 @@ Resolve declaration/implementation duplicates by path, node ID, and source span,
 Consult the documents designated by the applicable instructions and conventions for repository policy and architectural intent.
 Graft is generated local state, not repository policy or a source of truth.
 For files outside the index or an unavailable Graft executable, continue with ordinary file search and source reading.
-Do not initialize an unindexed repository solely because this skill is active.
 
 ## Enrich symbols as they become understood
 
