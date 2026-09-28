@@ -5,11 +5,16 @@ It combines targeted code retrieval with incremental enrichment during ordinary 
 
 ## Graft versions
 
-This skill was developed with Graft 0.16.0, with basic operation confirmed through practical use.
-The workflow targets v0.20.0, reviewed against its tagged source and tests for retrieval lifecycle, Trail integration, and GraphV1 summary storage.
-Focused checks with the installed v0.20.0 CLI/MCP also passed for missing-index behavior, refresh and worktree seeding, helper summary preservation and projection rebuilds, and cached Trail rule attachment.
-Live Trail service operations and API-backed deep enrichment were not validated end to end.
-These observations are not a compatibility guarantee.
+At the session's first Graft use, the skill checks the actual CLI or connected MCP server version and selects the corresponding reviewed behavior.
+The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, and v0.20.0; all four already support query-time refresh and worktree seeding.
+An unlisted or unverifiable runtime is reported once, and work continues through ordinary source search without automatic upgrades or initialization.
+See [Compatibility](references/compatibility.md) for version-specific differences, evidence, and verification limits.
+
+## Progressive loading
+
+[SKILL.md](SKILL.md) contains the shared boundaries and selects the guidance needed for the task.
+Agents read [Compatibility](references/compatibility.md) at first use, [Retrieval](references/retrieval.md) when querying code, and [Enrichment](references/enrichment.md) only when writing summaries or using native deep enrichment.
+Shared behavior has one maintained definition; version differences are recorded in the compatibility table rather than separate copies of the skill or helper.
 
 ## Purpose
 
@@ -17,7 +22,7 @@ Help agents choose the right Graft query, avoid redundant source reading, and re
 The included helper validates and applies summary updates without changing the graph's structural data.
 An API key is optional: agents can maintain symbol summaries themselves, while broader API-backed enrichment uses Graft's native `graft build --deep`.
 
-Graft v0.20 retrieval handles structural freshness, including source edits and branch switches, and can seed a linked worktree from its main checkout's existing graph.
+The reviewed Graft versions handle structural freshness, including source edits and branch switches, and can seed a linked worktree from its main checkout's existing graph.
 The skill lets retrieval run before the helper reads the graph, without a local-index precheck or a redundant session-start build.
 Running or recommending `graft init` is prohibited.
 If neither a local nor a seedable index is available, the agent explicitly reports this and continues with ordinary source search without creating an index, suggesting creation, or requesting initialization permission.
