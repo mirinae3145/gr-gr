@@ -6,7 +6,9 @@ It combines targeted code retrieval with incremental enrichment during ordinary 
 ## Graft versions
 
 This skill was developed with Graft 0.16.0, with basic operation confirmed through practical use.
-The 0.18.0 release was reviewed against 0.16.0 for compatibility; no breaking changes were found in the commands or summary-storage behavior this skill relies on, but an end-to-end run was not performed.
+The workflow targets v0.20.0, reviewed against its tagged source and tests for retrieval lifecycle, Trail integration, and GraphV1 summary storage.
+Focused checks with the installed v0.20.0 CLI/MCP also passed for missing-index behavior, refresh and worktree seeding, helper summary preservation and projection rebuilds, and cached Trail rule attachment.
+Live Trail service operations and API-backed deep enrichment were not validated end to end.
 These observations are not a compatibility guarantee.
 
 ## Purpose
@@ -15,10 +17,14 @@ Help agents choose the right Graft query, avoid redundant source reading, and re
 The included helper validates and applies summary updates without changing the graph's structural data.
 An API key is optional: agents can maintain symbol summaries themselves, while broader API-backed enrichment uses Graft's native `graft build --deep`.
 
-On first use of a repository in each agent session and after a branch switch, the skill refreshes an existing index with `graft build` before using it.
+Graft v0.20 retrieval handles structural freshness, including source edits and branch switches, and can seed a linked worktree from its main checkout's existing graph.
+The skill lets retrieval run before the helper reads the graph, without a local-index precheck or a redundant session-start build.
 Running or recommending `graft init` is prohibited.
-If no index exists, the agent explicitly reports this and continues with ordinary source search without creating an index, suggesting creation, or requesting initialization permission.
-These refreshes reduce unnoticed stale structural state but do not regenerate stale semantic summaries.
+If neither a local nor a seedable index is available, the agent explicitly reports this and continues with ordinary source search without creating an index, suggesting creation, or requesting initialization permission.
+Automatic refresh does not regenerate stale semantic summaries or update Markdown cards; a changed helper summary batch still needs one normal `graft build` for the retrieval index and cards.
+
+Trail upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration; interactive `trail push` can also run the init flow in an unwired repository.
+Rules attached to retrieval results are checked separately from implementation summaries and are never copied into them.
 
 ## Development background
 

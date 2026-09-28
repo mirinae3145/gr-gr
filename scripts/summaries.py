@@ -15,7 +15,7 @@ import tempfile
 PAYLOAD_VERSION = 1
 SYMBOL_KINDS = {
     "function", "method", "class", "type", "interface", "enum", "struct",
-    "trait", "variable", "constant", "module", "namespace",
+    "trait", "variable", "constant", "module",
 }
 STATES = {"pending", "stale", "ready"}
 HASH = re.compile(r"[0-9a-f]{64}\Z")
@@ -80,6 +80,8 @@ def read_source(path):
 
 
 class Graph:
+    """Read a checkout-local graph after Graft retrieval has seeded/refreshed it."""
+
     def __init__(self, repo, graph="graft/.graph/wiring.json"):
         self.repo = Path(repo).resolve()
         self.path = (self.repo / graph).resolve()
@@ -88,7 +90,8 @@ class Graph:
             self.raw = self.path.read_bytes()
             self.data = json.loads(self.raw)
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
-            raise SummaryError("Cannot read Graft graph; use an existing structural index: " + str(exc)) from exc
+            raise SummaryError("Cannot read Graft graph; first use Graft retrieval in this checkout "
+                               "to access an existing or seedable index; do not initialize one: " + str(exc)) from exc
         require(isinstance(self.data, dict), "Unsupported graph shape; inspect the installed schema.")
         require(isinstance(self.data.get("meta"), dict) and self.data["meta"].get("version") == 1,
                 "Unsupported graph version; re-check compatibility before writing.")
@@ -119,7 +122,7 @@ class Graph:
             require(relative in self.files, "Missing file hash metadata: " + relative)
             text = read_source(path)
             require(digest(text.encode("utf-8")) == self.files[relative]["body_hash"],
-                    "Source differs from its graph file hash; run graft build and select again: " + relative)
+                    "Source differs from its graph file hash; refresh through Graft retrieval and select again: " + relative)
             self.sources[relative] = text
         return self.sources[relative]
 
@@ -137,7 +140,7 @@ class Graph:
         require(self.path.read_bytes() == self.raw, "Graph changed concurrently; select again.")
         for relative, original in self.sources.items():
             require(read_source(self.repo / relative) == original,
-                    "Source changed concurrently; rebuild and select again: " + relative)
+                    "Source changed concurrently; refresh through Graft retrieval and select again: " + relative)
 
 
 def validate_summary(summary):
