@@ -1,11 +1,13 @@
 ---
 name: gr-gr
-description: "Use Graft as a compact structural and semantic context layer for coding agents. Use for any codebase work unless explicitly excluded. If the actual results of tool calls or the way semantics are stored significantly differ from what is expected in this skill, stop using it immediately and notify the user."
+description: "Use Graft as a compact structural and semantic context layer for codebase work requiring implementation understanding, symbol or call relationships, or behavior changes. Tasks that require no implementation understanding may use ordinary file search and comparison. If the actual results of tool calls or the way semantics are stored significantly differ from what is expected in this skill, stop using it immediately and notify the user."
 ---
 
 # Grasp Graft
 
-Use Graft as the first code-context layer in an indexed repository, and preserve useful understanding as summaries of individual symbols.
+Use Graft as the first code-context layer in an indexed repository when the task requires implementation understanding, exploration of symbol or call relationships, or behavior changes, and preserve useful understanding as summaries of individual symbols.
+For tasks that require no implementation understanding, ordinary file search and comparison are sufficient; no Graft runtime or index checks are needed.
+Choose by the understanding the task requires, not by file type: if implementation verification becomes necessary during such work, apply Graft to that part of the task.
 Keep the user's development task primary: reuse understanding acquired during that work rather than turning it into an indexing project.
 
 ## Load only the guidance needed
