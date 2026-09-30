@@ -8,7 +8,7 @@ Tasks that require no implementation understanding can use ordinary file search 
 ## Graft versions
 
 At the session's first Graft use, the skill checks the actual CLI or connected MCP server version and selects the corresponding reviewed behavior.
-The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, and v0.20.0; all four already support query-time refresh and worktree seeding.
+The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, and v0.21.1; all reviewed releases support query-time refresh and worktree seeding.
 An unlisted or unverifiable runtime is reported once, and work continues through ordinary source search without automatic upgrades or initialization.
 See [Compatibility](references/compatibility.md) for version-specific differences, evidence, and verification limits.
 
@@ -31,6 +31,7 @@ If neither a local nor a seedable index is available, the agent explicitly repor
 Automatic refresh does not regenerate stale semantic summaries or update Markdown cards; a changed helper summary batch still needs one normal `graft build` for the retrieval index and cards.
 
 Trail upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration; interactive `trail push` can also run the init flow in an unwired repository.
+On v0.21.0/v0.21.1, `trail pull` also applies accepted changes to agent context files, including instructions, rules, and skills; `claude-md pull` delegates to the same broader operation.
 Rules attached to retrieval results are checked separately from implementation summaries and are never copied into them.
 
 ## Development background
