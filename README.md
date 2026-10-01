@@ -3,19 +3,19 @@
 `gr-gr` is a coding-agent skill for finding relevant code through an existing Graft index and preserving useful understanding as symbol summaries.
 It combines targeted code retrieval with incremental enrichment during ordinary development work.
 Use it when a task requires implementation understanding, symbol or call relationships, or behavior changes.
-Tasks that require no implementation understanding can use ordinary file search and comparison; see [SKILL.md](SKILL.md) for the scope guidance.
+Tasks that require no implementation understanding can use ordinary file search and comparison; see [SKILL.md](skills/gr-gr/SKILL.md) for the scope guidance.
 
 ## Graft versions
 
 At the session's first Graft use, the skill checks the actual CLI or connected MCP server version and selects the corresponding reviewed behavior.
 The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, and v0.21.1; all reviewed releases support query-time refresh and worktree seeding.
 An unlisted or unverifiable runtime is reported once, and work continues through ordinary source search without automatic upgrades or initialization.
-See [Compatibility](references/compatibility.md) for version-specific differences, evidence, and verification limits.
+See [Compatibility](skills/gr-gr/references/compatibility.md) for version-specific differences, evidence, and verification limits.
 
 ## Progressive loading
 
-[SKILL.md](SKILL.md) contains the shared boundaries and selects the guidance needed for the task.
-Agents read [Compatibility](references/compatibility.md) at first use, [Retrieval](references/retrieval.md) when querying code, and [Enrichment](references/enrichment.md) only when writing summaries or using native deep enrichment.
+[SKILL.md](skills/gr-gr/SKILL.md) contains the shared boundaries and selects the guidance needed for the task.
+Agents read [Compatibility](skills/gr-gr/references/compatibility.md) at first use, [Retrieval](skills/gr-gr/references/retrieval.md) when querying code, and [Enrichment](skills/gr-gr/references/enrichment.md) only when writing summaries or using native deep enrichment.
 Shared behavior has one maintained definition; version differences are recorded in the compatibility table rather than separate copies of the skill or helper.
 
 ## Purpose
