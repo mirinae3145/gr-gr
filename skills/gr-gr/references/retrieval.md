@@ -12,6 +12,8 @@ If retrieval reports no graph, explicitly tell the user which repository has no 
 
 Let the next retrieval handle source edits and branch changes; do not add a session-start build, branch/HEAD bookkeeping, or a build before each query.
 Automatic refresh is structural only; it does not regenerate stale semantic summaries or update Markdown cards.
+Structural refresh does not require semantic enrichment; apply the separate criteria in [SKILL.md](../SKILL.md).
+When enrichment is deferred, treat stale summaries as unverified context and check the current source before relying on them.
 Respect `--no-refresh`, `GRAFT_NO_REFRESH`, `GRAFT_NO_SEED`, and filesystem-write restrictions; do not bypass them with a manual build or copy.
 Graft can answer from the old graph when refresh fails or a rebuild remains busy, so a successful query alone does not guarantee freshness.
 If Graft is unavailable or reports a skipped/failed refresh, report the limitation and use ordinary source search until freshness is restored; retry a busy operation after the competing writer finishes.

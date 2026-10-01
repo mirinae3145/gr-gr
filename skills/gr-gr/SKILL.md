@@ -5,10 +5,14 @@ description: "Use Graft as a compact structural and semantic context layer for c
 
 # Grasp Graft
 
-Use Graft as the first code-context layer in an indexed repository when the task requires implementation understanding, exploration of symbol or call relationships, or behavior changes, and preserve useful understanding as summaries of individual symbols.
+Use Graft as the first code-context layer in an indexed repository when the task requires implementation understanding, exploration of symbol or call relationships, or behavior changes.
 For tasks that require no implementation understanding, ordinary file search and comparison are sufficient; no Graft runtime or index checks are needed.
 Choose by the understanding the task requires, not by file type: if implementation verification becomes necessary during such work, apply Graft to that part of the task.
 Keep the user's development task primary: reuse understanding acquired during that work rather than turning it into an indexing project.
+Structural retrieval and semantic enrichment are separate decisions; reading or editing a symbol does not by itself require summary maintenance.
+Update summaries when the task yields reusable understanding of a symbol's responsibility, important behavior, or invariant, or reveals that an existing summary misrepresents the current implementation.
+For a local edit that adds no such understanding and leaves the summary's meaning unchanged, skip enrichment, including helper inspection and explicit builds for summary maintenance.
+Choose by semantic value and accuracy, not the number of functions or lines changed; missing or `stale` state alone does not require enrichment.
 
 ## Load only the guidance needed
 
@@ -19,7 +23,7 @@ Keep already loaded guidance in session context; do not read every reference at 
 | --- | --- |
 | First Graft use, or a runtime change | [Compatibility](references/compatibility.md): identify the actual runtime and select its reviewed behavior |
 | First code retrieval, including graph preparation for enrichment | [Retrieval](references/retrieval.md): choose one query and let Graft handle freshness and worktree seeding |
-| After understanding a symbol whose summary may need updating, or when native deep enrichment is authorized | [Enrichment](references/enrichment.md): preserve summaries and apply the appropriate helper/build sequence |
+| When summary enrichment is warranted by the criteria above, or when native deep enrichment is authorized | [Enrichment](references/enrichment.md): preserve summaries and apply the appropriate helper/build sequence |
 
 Check the version before any retrieval or enrichment.
 For CLI use, run `graft --version` with the same executable resolution and environment as the planned commands.

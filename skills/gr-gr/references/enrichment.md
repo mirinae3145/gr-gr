@@ -6,15 +6,19 @@ If retrieval is already complete and the source and checkout are unchanged, reus
 Verify the CLI version too before applying helper updates when retrieval used MCP: the batch may need a CLI build.
 GraphV1's `meta.version: 1` is a storage schema, not the installed runtime version.
 
-## Enrich symbols as they become understood
+## Enrich selected symbols
+
+Apply the enrichment criteria in [SKILL.md](../SKILL.md) before entering this workflow.
+Do not inspect or select nodes solely because they were read or edited, or to clear every missing or `stale` summary.
 
 At the first enrichment in a session for a repository, run the helper's `inspect` command.
 Retain the supported schema in session context; do not repeat schema discovery unless the repository uses a different schema, Graft is upgraded, or a compatibility error occurs.
 The helper still checks current hashes and required fields on every write.
 
-When retrieval does not provide a useful summary and you read enough of the implementation to explain a symbol reliably, select that node and write its summary.
+For a symbol that warrants enrichment, select its node once you have read enough of the implementation to explain it reliably.
 Check the stored state: absence from an `ask` response does not prove the graph lacks a summary.
-Preserve useful `ready` summaries and refresh missing or `stale` summaries.
+Preserve useful `ready` summaries and write or refresh summaries only for the selected scope.
+If a stale summary still describes the implementation accurately and no new reusable understanding warrants enrichment, leave it stale rather than rewriting it merely to restore `ready` state.
 Do not read unrelated code solely to fill summaries during an ordinary development task.
 If the source is incomplete or unclear, leave the node pending rather than guessing.
 
@@ -24,7 +28,7 @@ Do not merely restate a signature or put review findings, proposed changes, or r
 Do not infer an implementation from a declaration alone.
 
 After source edits or a checkout change, use the next relevant retrieval to refresh before selecting changed or moved symbols with the helper.
-Refresh summaries for affected stale symbols and newly understood definitions; keep unrelated cached summaries intact.
+Reconsider whether enrichment is warranted against the edited implementation; refresh only the summaries that meet those criteria and keep unrelated cached summaries intact.
 Once selected, retain the node ID, body hash, source hash, and prior summary state in the payload while authoring the summary.
 If source or node identity changes before application, refresh through retrieval and select again, then reconsider the summary against the new implementation.
 
