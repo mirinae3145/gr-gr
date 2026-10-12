@@ -64,7 +64,7 @@ graft build --deep
 ```
 
 A deep pass is a native enrichment operation, not a mandatory step after every source edit or incremental summary batch.
-Let retrieval handle ordinary structural freshness; reserve explicit normal builds for the helper batch above or when current Markdown projections are actually needed.
+Let retrieval handle ordinary structural freshness; reserve explicit normal builds for authorized missing-index creation under [Retrieval](retrieval.md), the helper batch above, or when current Markdown projections are actually needed.
 Finish pending helper updates before starting a deep pass, and do not run them concurrently.
 After a deep pass, select again before applying any remaining payloads so cached summaries and hashes reflect Graft's current output.
 Respect native caching and failure reporting; do not clear ready summaries or replace the provider merely to force recomputation.

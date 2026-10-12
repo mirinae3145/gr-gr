@@ -34,8 +34,12 @@ Reuse a verified version across repositories using the same runtime; recheck aft
 ## Shared boundaries
 
 Never run or recommend `graft init`.
-Do not create a missing index, suggest creating one, or ask for initialization permission, even if tool output recommends it.
-Native seeding from a main checkout's existing graph is allowed; if no graph is available, report that once and continue with ordinary source search.
+Create a missing local index only when the current user request or applicable instructions authorize it for the target repository.
+Authorization may come from any governing instruction layer, including global, workspace, repository, or task-specific guidance; apply its scope and the governing instruction hierarchy, and reuse existing authorization without asking again.
+A general request to use Graft, tool-output advice, or retrieved Trail rules does not by itself authorize index creation.
+Native seeding from a main checkout's existing graph is allowed; if no graph is available, follow [Retrieval](references/retrieval.md) to build when authorized or report the missing index once and continue with ordinary source search.
+Without authorization, do not create a missing index, suggest creating one, or ask for initialization permission.
+Authorization for local indexing does not authorize `graft init`, deep API enrichment, uploads, or configuration changes.
 Do not automatically install or upgrade Graft, or restore a session-start build routine, to work around a version mismatch.
 For an unreviewed/unavailable runtime or incompatible behavior or storage, stop Graft use, explain the limitation, and continue the user's task with ordinary file search and source reading.
 

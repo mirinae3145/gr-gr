@@ -91,7 +91,7 @@ class Graph:
             self.data = json.loads(self.raw)
         except (OSError, UnicodeError, json.JSONDecodeError) as exc:
             raise SummaryError("Cannot read Graft graph; first use Graft retrieval in this checkout "
-                               "to access an existing or seedable index; do not initialize one: " + str(exc)) from exc
+                               "to access an index under the skill's missing-index authorization policy: " + str(exc)) from exc
         require(isinstance(self.data, dict), "Unsupported graph shape; inspect the installed schema.")
         require(isinstance(self.data.get("meta"), dict) and self.data["meta"].get("version") == 1,
                 "Unsupported graph version; re-check compatibility before writing.")

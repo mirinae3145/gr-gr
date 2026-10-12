@@ -3,14 +3,18 @@
 Read after selecting a reviewed runtime in [Compatibility](compatibility.md), before the first retrieval in a session.
 The shared workflow applies to every version listed there.
 
-## Access an existing index
+## Access or create an authorized index
 
 Start with the retrieval needed for the task, targeting the intended repository or worktree root explicitly where supported.
 Do not gate retrieval on the local presence of `graft/.graph/wiring.json`: the reviewed runtimes check freshness before retrieval and can seed a linked worktree from its main checkout's existing graph, then refresh it for the worktree's source.
 This reuses an existing index; a repository with neither its own graph nor a seedable parent graph is not automatically indexed.
-If retrieval reports no graph, explicitly tell the user which repository has no Graft index and continue with ordinary file search and source reading without creating one.
+If retrieval reports no graph, check the index-creation authorization defined in [Shared boundaries](../SKILL.md#shared-boundaries).
+When authorized for this repository, run one normal `graft build <repo-root> --no-gitignore --no-ignore` with a reviewed CLI runtime, then retry the needed retrieval.
+The flags keep the initial build from changing repository ignore configuration; do not use `graft init` or add `--deep` under local-index authorization.
+If retrieval used MCP, verify the CLI version separately before building.
+If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index and continue with ordinary file search and source reading.
 
-Let the next retrieval handle source edits and branch changes; do not add a session-start build, branch/HEAD bookkeeping, or a build before each query.
+After an index is available, let the next retrieval handle source edits and branch changes; do not add a session-start build, branch/HEAD bookkeeping, or a build before each query.
 Automatic refresh is structural only; it does not regenerate stale semantic summaries or update Markdown cards.
 Structural refresh does not require semantic enrichment; apply the separate criteria in [SKILL.md](../SKILL.md).
 When enrichment is deferred, treat stale summaries as unverified context and check the current source before relying on them.

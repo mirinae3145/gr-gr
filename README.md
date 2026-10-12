@@ -27,7 +27,10 @@ An API key is optional: agents can maintain symbol summaries themselves, while b
 The reviewed Graft versions handle structural freshness, including source edits and branch switches, and can seed a linked worktree from its main checkout's existing graph.
 The skill lets retrieval run before the helper reads the graph, without a local-index precheck or a redundant session-start build.
 Running or recommending `graft init` is prohibited.
-If neither a local nor a seedable index is available, the agent explicitly reports this and continues with ordinary source search without creating an index, suggesting creation, or requesting initialization permission.
+If neither a local nor a seedable index is available, the agent may create a local index with a normal build when the current user request or applicable instructions authorize it for that repository.
+Authorization can come from global, workspace, repository, or task-specific guidance, subject to its scope and the governing instruction hierarchy; existing authorization does not need to be repeated in the prompt.
+Without authorization, the agent reports the missing index and continues with ordinary source search without suggesting creation or requesting initialization permission.
+See [Retrieval](skills/gr-gr/references/retrieval.md) for the build procedure; local-index authorization does not include deep API enrichment, uploads, or configuration changes.
 Automatic refresh does not regenerate stale semantic summaries or update Markdown cards; a changed helper summary batch still needs one normal `graft build` for the retrieval index and cards.
 
 Trail upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration; interactive `trail push` can also run the init flow in an unwired repository.
