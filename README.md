@@ -1,6 +1,7 @@
 # Grasp Graft
 
 `gr-gr` is a coding-agent skill for finding relevant code through an existing Graft index and preserving useful understanding as symbol summaries.
+Graft is now the code-map component of Trail-code; this skill retains its name and focuses on that map and its symbol summaries.
 It combines targeted code retrieval with incremental enrichment during ordinary development work.
 Use it when a task requires implementation understanding, symbol or call relationships, or behavior changes.
 Tasks that require no implementation understanding can use ordinary file search and comparison; see [SKILL.md](skills/gr-gr/SKILL.md) for the scope guidance.
@@ -8,7 +9,7 @@ Tasks that require no implementation understanding can use ordinary file search 
 ## Graft versions
 
 At the session's first Graft use, the skill checks the actual CLI or connected MCP server version and selects the corresponding reviewed behavior.
-The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, and v0.21.1; all reviewed releases support query-time refresh and worktree seeding.
+The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, v0.21.1, and v0.22.0; all reviewed releases support query-time refresh and worktree seeding.
 An unlisted or unverifiable runtime is reported once, and work continues through ordinary source search without automatic upgrades or initialization.
 See [Compatibility](skills/gr-gr/references/compatibility.md) for version-specific differences, evidence, and verification limits.
 
@@ -26,16 +27,20 @@ An API key is optional: agents can maintain symbol summaries themselves, while b
 
 The reviewed Graft versions handle structural freshness, including source edits and branch switches, and can seed a linked worktree from its main checkout's existing graph.
 The skill lets retrieval run before the helper reads the graph, without a local-index precheck or a redundant session-start build.
-Running or recommending `graft init` is prohibited.
+Running or recommending `graft init` or `trail init` is prohibited.
 If neither a local nor a seedable index is available, the agent may create a local index with a normal build when the current user request or applicable instructions authorize it for that repository.
 Authorization can come from global, workspace, repository, or task-specific guidance, subject to its scope and the governing instruction hierarchy; existing authorization does not need to be repeated in the prompt.
 Without authorization, the agent reports the missing index and continues with ordinary source search without suggesting creation or requesting initialization permission.
 See [Retrieval](skills/gr-gr/references/retrieval.md) for the build procedure; local-index authorization does not include deep API enrichment, uploads, or configuration changes.
 Automatic refresh does not regenerate stale semantic summaries or update Markdown cards; a changed helper summary batch still needs one normal `graft build` for the retrieval index and cards.
 
-Trail upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration; interactive `trail push` can also run the init flow in an unwired repository.
-On v0.21.0/v0.21.1, `trail pull` also applies accepted changes to agent context files, including instructions, rules, and skills; `claude-md pull` delegates to the same broader operation.
-Rules attached to retrieval results are checked separately from implementation summaries and are never copied into them.
+Historical Trail/brain upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration.
+On v0.21.0/v0.21.1, `graft trail pull` also applies accepted changes to agent context files; those command groups are absent in v0.22.0.
+In v0.22.0, `@nanonets/graft` provides `graft` and `@trailhq/trail-code` provides `trail`.
+Both expose the code map, but `graft check` maps to `trail build --check`; `trail check` checks changes against learnings and skills.
+The MCP server advertises `graft_*` or `trail_*` tools according to its entrypoint.
+Rules and local learnings attached to retrieval results are checked separately from implementation summaries and are never copied into them.
+Learning storage, skill folding, automatic wiring migration, and cloud synchronization remain outside ordinary code-map retrieval and summary enrichment; see [Compatibility](skills/gr-gr/references/compatibility.md#trail-code-v0220) for the boundaries.
 
 ## Development background
 
@@ -48,7 +53,7 @@ File summaries and concept maps remain the responsibility of Graft's native deep
 
 This section is user-responsibility, not AI's.
 
-Do not run `graft init` things; instead, apply the following snippet or equivalent form based on your environment and agent.
+Do not run `graft init` or `trail init`; instead, apply the following snippet or equivalent form based on your environment and agent.
 
 ```toml
 [mcp_servers.graft]
@@ -57,6 +62,8 @@ args = ["mcp"]
 ```
 
 Example above is for Codex (`~/.codex/config.toml`).
+Keep an existing verified configuration; the renamed package does not require replacing it.
+For a user-selected `trail` installation, `command = "trail"` with `args = ["mcp"]` exposes the corresponding `trail_*` tools.
 
 ### Linux
 

@@ -5,6 +5,8 @@ First select a reviewed runtime via [Compatibility](compatibility.md), then foll
 If retrieval is already complete and the source and checkout are unchanged, reuse it.
 Verify the CLI version too before applying helper updates when retrieval used MCP: the batch may need a CLI build.
 GraphV1's `meta.version: 1` is a storage schema, not the installed runtime version.
+The examples retain `graft`; a reviewed `trail` runtime can use the corresponding code-map commands under [Compatibility](compatibility.md#trail-code-v0220).
+On v0.22.0, learnings in `.trail/` or the personal Trail home are separate from these symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
 
 ## Enrich selected symbols
 
