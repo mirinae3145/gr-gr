@@ -1,7 +1,7 @@
 # Enrichment
 
-Read only when writing symbol summaries or using native API-backed enrichment.
-First select a reviewed runtime via [Compatibility](compatibility.md), then follow [Retrieval](retrieval.md) to access the target checkout's graph before helper `inspect`/`select` or a deep build.
+Read only after explicit activation through [Optional capabilities](README.md).
+First select a reviewed runtime via [Compatibility](compatibility.md), then follow [Retrieval](../retrieval.md) to access the target checkout's graph before helper `inspect`/`select` or a deep build.
 If retrieval is already complete and the source and checkout are unchanged, reuse it.
 Verify the CLI version too before applying helper updates when retrieval used MCP: the batch may need a CLI build.
 GraphV1's `meta.version: 1` is a storage schema, not the installed runtime version.
@@ -10,7 +10,7 @@ On v0.22.0/v0.23.0, learnings in `.trail/learnings/` or the personal Trail home 
 
 ## Enrich selected symbols
 
-Apply the enrichment criteria in [SKILL.md](../SKILL.md) before entering this workflow.
+Apply the enrichment criteria in [Optional capabilities](README.md#incremental-enrichment-criteria) before entering this workflow.
 Do not inspect or select nodes solely because they were read or edited, or to clear every missing or `stale` summary.
 
 At the first enrichment in a session for a repository, run the helper's `inspect` command.
@@ -44,12 +44,12 @@ Use `ask` to verify integration on first use or after compatibility changes, not
 
 | Situation | Route |
 | --- | --- |
-| A few symbols already read during work | Agent-authored incremental summaries, whether or not an API is available |
-| An API is configured and its use is authorized for semantic enrichment | Graft's native `graft build --deep` |
-| No usable API configuration | Continue structural retrieval and agent-authored incremental summaries |
+| Incremental enrichment explicitly requested for symbols already read | Agent-authored incremental summaries, whether or not an API is available |
+| Native deep enrichment explicitly requested and API use authorized | Graft's native `graft build --deep` |
+| No usable API configuration for a requested deep pass | Report the limitation; continue structural retrieval, without switching to incremental enrichment unless separately requested |
 | Native API enrichment fails | Preserve completed results, report the failure, and continue the development task with the available index |
 
-Use the native deep pass for initial or broader semantic enrichment when the API route is available.
+Use the native deep pass for explicitly requested initial or broader semantic enrichment when the API route is authorized.
 Let Graft generate and cache file summaries, concept maps, and symbol-level meaning according to its own implementation.
 Do not suppress those outputs, invent per-file or per-concept value thresholds, or implement a parallel API summarizer in this skill.
 The incremental helper remains limited to source-symbol summaries; that limit does not apply to native `--deep`.
@@ -66,7 +66,7 @@ graft build --deep
 ```
 
 A deep pass is a native enrichment operation, not a mandatory step after every source edit or incremental summary batch.
-Let retrieval handle ordinary structural freshness; reserve explicit normal builds for authorized missing-index creation under [Retrieval](retrieval.md), the helper batch above, or when current Markdown projections are actually needed.
+Let retrieval handle ordinary structural freshness; reserve explicit normal builds for authorized missing-index creation under [Retrieval](../retrieval.md), the helper batch above, or when current Markdown projections are actually needed.
 Finish pending helper updates before starting a deep pass, and do not run them concurrently.
 After a deep pass, select again before applying any remaining payloads so cached summaries and hashes reflect Graft's current output.
 Respect native caching and failure reporting; do not clear ready summaries or replace the provider merely to force recomputation.
@@ -75,12 +75,13 @@ Do not infer discounted Batch API pricing from the `--deep` flag.
 ## Use the helper
 
 Python 3.9 or later and the standard library are sufficient.
-Resolve [scripts/summaries.py](../scripts/summaries.py) against the installed skill root (the parent of `references/`), not this reference directory or the working repository.
-The examples use `gr_gr_skill` for that directory and `gr_gr_repo` for the target repository.
+Resolve [scripts/summaries.py](scripts/summaries.py) against this optional bundle directory, not the working repository.
+The examples use `gr_gr_optional` for that directory and `gr_gr_repo` for the target repository.
 
 The helper reads `wiring.json` directly and neither seeds nor refreshes it.
-If enrichment is the first operation, use `graft map "$gr_gr_repo"` once to enter the native refresh/seeding path.
-Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never point `--graph` at the parent checkout to bypass seeding.
+Apply the environment requirement in [Shared boundaries](../../SKILL.md#shared-boundaries) to all CLI operations below, including deep builds.
+If enrichment is the first operation, use `graft map "$gr_gr_repo"` once to enter the local refresh path.
+Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never point `--graph` at the parent checkout or copy its graph.
 Re-enter retrieval after source or checkout changes before selecting again; the helper's hash and prior-state checks remain required at application time.
 
 Choose the graph path from the verified runtime's active directory after retrieval, following [v0.23.0 directory selection](compatibility.md#trail-code-v0230) when applicable.
@@ -89,8 +90,8 @@ Pass it consistently to all helper operations; the helper does not interpret `GR
 Keep any runtime directory override on the subsequent build too.
 
 ```sh
-python "$gr_gr_skill/scripts/summaries.py" inspect --repo "$gr_gr_repo" --graph "$gr_gr_graph"
-python "$gr_gr_skill/scripts/summaries.py" select --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
+python "$gr_gr_optional/scripts/summaries.py" inspect --repo "$gr_gr_repo" --graph "$gr_gr_graph"
+python "$gr_gr_optional/scripts/summaries.py" select --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
     --id 'test/utils.hpp#runAndWait' --output /tmp/gr-gr-selection.json
 ```
 
@@ -103,7 +104,7 @@ Fill each selected entry's `summary` field, remove entries that cannot be summar
 The file's `symbols` list may contain only the subset being applied.
 
 ```sh
-python "$gr_gr_skill/scripts/summaries.py" apply --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
+python "$gr_gr_optional/scripts/summaries.py" apply --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
     --input /tmp/gr-gr-selection.json
 # Run from the target repository after a batch with rebuild_required: true:
 graft build
