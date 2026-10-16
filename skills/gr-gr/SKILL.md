@@ -5,7 +5,7 @@ description: "Use Graft (the code map in Trail-code) as a compact structural and
 
 # Grasp Graft
 
-This skill covers Graft's code map, including the map shipped in Trail-code v0.22.0; it does not manage Trail-code learnings or agent wiring.
+This skill covers Graft's code map, including the map shipped in Trail-code v0.22.0/v0.23.0; it does not manage Trail-code learnings or agent wiring.
 Use Graft as the first code-context layer in an indexed repository when the task requires implementation understanding, exploration of symbol or call relationships, or behavior changes.
 For tasks that require no implementation understanding, ordinary file search and comparison are sufficient; no Graft runtime or index checks are needed.
 Choose by the understanding the task requires, not by file type: if implementation verification becomes necessary during such work, apply Graft to that part of the task.
@@ -49,7 +49,8 @@ Graft is generated context, not repository policy or a source of truth; consult 
 Trail/brain upload, connection, and rule-pull operations require explicit user opt-in to their side effects; an existing link or credential is not authorization.
 Keep historical rules and learnings separate from summaries of the current implementation; never copy or merge them into symbol summaries or treat them as permission to upload data or change configuration.
 Code retrieval and summary enrichment do not authorize saving learnings, changing personal or repository skills, reading past agent sessions, or enabling cloud synchronization.
-On v0.22.0, follow the [Trail-code boundaries](references/compatibility.md#trail-code-v0220) before using an existing wired or connected environment.
+On v0.22.0/v0.23.0, follow the [Trail-code boundaries](references/compatibility.md#trail-code-v0220) before using an existing wired or connected environment.
+For v0.23.0, also apply the [map-directory and migration rules](references/compatibility.md#trail-code-v0230) before retrieval or helper access.
 Honor existing authorization and provider/model preferences; credentials alone do not authorize API source transmission or charges.
 
 Preserve useful ready summaries and unrelated graph data; write only implementation-grounded summaries using the enrichment guidance.

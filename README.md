@@ -9,7 +9,7 @@ Tasks that require no implementation understanding can use ordinary file search 
 ## Graft versions
 
 At the session's first Graft use, the skill checks the actual CLI or connected MCP server version and selects the corresponding reviewed behavior.
-The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, v0.21.1, and v0.22.0; all reviewed releases support query-time refresh and worktree seeding.
+The current compatibility table covers v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, v0.21.1, v0.22.0, and v0.23.0; all reviewed releases support query-time refresh and worktree seeding.
 An unlisted or unverifiable runtime is reported once, and work continues through ordinary source search without automatic upgrades or initialization.
 See [Compatibility](skills/gr-gr/references/compatibility.md) for version-specific differences, evidence, and verification limits.
 
@@ -35,12 +35,15 @@ See [Retrieval](skills/gr-gr/references/retrieval.md) for the build procedure; l
 Automatic refresh does not regenerate stale semantic summaries or update Markdown cards; a changed helper summary batch still needs one normal `graft build` for the retrieval index and cards.
 
 Historical Trail/brain upload, connection, and rule-pull commands require explicit user opt-in because they transmit data or rewrite configuration.
-On v0.21.0/v0.21.1, `graft trail pull` also applies accepted changes to agent context files; those command groups are absent in v0.22.0.
-In v0.22.0, `@nanonets/graft` provides `graft` and `@trailhq/trail-code` provides `trail`.
+On v0.21.0/v0.21.1, `graft trail pull` also applies accepted changes to agent context files; those command groups are absent in v0.22.0/v0.23.0.
+In v0.22.0/v0.23.0, `@nanonets/graft` provides `graft` and `@trailhq/trail-code` provides `trail`.
 Both expose the code map, but `graft check` maps to `trail build --check`; `trail check` checks changes against learnings and skills.
 The MCP server advertises `graft_*` or `trail_*` tools according to its entrypoint.
 Rules and local learnings attached to retrieval results are checked separately from implementation summaries and are never copied into them.
 Learning storage, skill folding, automatic wiring migration, and cloud synchronization remain outside ordinary code-map retrieval and summary enrichment; see [Compatibility](skills/gr-gr/references/compatibility.md#trail-code-v0220) for the boundaries.
+
+In v0.23.0, Trail repositories use `.trail/cache/` for the code map and can move an existing `graft/` map there during retrieval.
+Use the helper's explicit `--graph` option for that location; see [v0.23.0 compatibility](skills/gr-gr/references/compatibility.md#trail-code-v0230) for directory selection and migration boundaries.
 
 ## Development background
 
@@ -65,6 +68,10 @@ Example above is for Codex (`~/.codex/config.toml`).
 Keep an existing verified configuration; the renamed package does not require replacing it.
 For a user-selected `trail` installation, `command = "trail"` with `args = ["mcp"]` exposes the corresponding `trail_*` tools.
 
+Exclude both `/graft/` and `/.trail/cache/` from Git while retaining `.trail/` learnings and shared hooks.
+The examples append to an existing `core.excludesFile`, or Git's default global ignore file when that setting is absent.
+`GRAFT_NO_GITIGNORE=1` disables normal build-time ignore-file updates; it does not prevent v0.23.0 directory migration from writing `.trail/.gitignore`.
+
 ### Linux
 
 Add below in the shell environment (e.g., `~/.profile`).
@@ -77,17 +84,24 @@ export GRAFT_NO_IGNORE=1
 Then run:
 
 ```bash
-mkdir -p ~/.config/git
-printf '/graft/\n' >> ~/.config/git/ignore
+gr_gr_ignore=$(git config --global --path --get core.excludesFile)
+if [ -z "$gr_gr_ignore" ]; then
+    gr_gr_ignore="${XDG_CONFIG_HOME:-$HOME/.config}/git/ignore"
+fi
+mkdir -p "$(dirname "$gr_gr_ignore")"
+printf '\n/graft/\n/.trail/cache/\n' >> "$gr_gr_ignore"
 ```
 
 ### Windows
 
 ```powershell
-New-Item -ItemType Directory -Force "$HOME\.config\git" | Out-Null
-Add-Content "$HOME\.config\git\ignore" "/graft/"
-
-git config --global core.excludesFile "$HOME/.config/git/ignore"
+$grGrIgnore = git config --global --path --get core.excludesFile
+if (-not $grGrIgnore) {
+    $grGrConfig = if ($env:XDG_CONFIG_HOME) { $env:XDG_CONFIG_HOME } else { "$HOME/.config" }
+    $grGrIgnore = Join-Path $grGrConfig "git/ignore"
+}
+New-Item -ItemType Directory -Force (Split-Path -Parent $grGrIgnore) | Out-Null
+Add-Content -Path $grGrIgnore -Value "`n/graft/`n/.trail/cache/"
 
 [Environment]::SetEnvironmentVariable("GRAFT_NO_GITIGNORE", "1", "User")
 [Environment]::SetEnvironmentVariable("GRAFT_NO_IGNORE", "1", "User")

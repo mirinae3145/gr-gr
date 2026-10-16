@@ -6,7 +6,7 @@ If retrieval is already complete and the source and checkout are unchanged, reus
 Verify the CLI version too before applying helper updates when retrieval used MCP: the batch may need a CLI build.
 GraphV1's `meta.version: 1` is a storage schema, not the installed runtime version.
 The examples retain `graft`; a reviewed `trail` runtime can use the corresponding code-map commands under [Compatibility](compatibility.md#trail-code-v0220).
-On v0.22.0, learnings in `.trail/` or the personal Trail home are separate from these symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
+On v0.22.0/v0.23.0, learnings in `.trail/learnings/` or the personal Trail home are separate from these symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
 
 ## Enrich selected symbols
 
@@ -83,9 +83,14 @@ If enrichment is the first operation, use `graft map "$gr_gr_repo"` once to ente
 Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never point `--graph` at the parent checkout to bypass seeding.
 Re-enter retrieval after source or checkout changes before selecting again; the helper's hash and prior-state checks remain required at application time.
 
+Choose the graph path from the verified runtime's active directory after retrieval, following [v0.23.0 directory selection](compatibility.md#trail-code-v0230) when applicable.
+Set `gr_gr_graph` to `graft/.graph/wiring.json`, `.trail/cache/.graph/wiring.json`, or the verified custom directory's graph path within this checkout.
+Pass it consistently to all helper operations; the helper does not interpret `GRAFT_DIR` or native CLI directory options.
+Keep any runtime directory override on the subsequent build too.
+
 ```sh
-python "$gr_gr_skill/scripts/summaries.py" inspect --repo "$gr_gr_repo"
-python "$gr_gr_skill/scripts/summaries.py" select --repo "$gr_gr_repo" \
+python "$gr_gr_skill/scripts/summaries.py" inspect --repo "$gr_gr_repo" --graph "$gr_gr_graph"
+python "$gr_gr_skill/scripts/summaries.py" select --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
     --id 'test/utils.hpp#runAndWait' --output /tmp/gr-gr-selection.json
 ```
 
@@ -98,7 +103,7 @@ Fill each selected entry's `summary` field, remove entries that cannot be summar
 The file's `symbols` list may contain only the subset being applied.
 
 ```sh
-python "$gr_gr_skill/scripts/summaries.py" apply --repo "$gr_gr_repo" \
+python "$gr_gr_skill/scripts/summaries.py" apply --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
     --input /tmp/gr-gr-selection.json
 # Run from the target repository after a batch with rebuild_required: true:
 graft build

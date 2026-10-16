@@ -15,6 +15,7 @@ These are exact reviewed releases, not an inferred continuous version range or a
 | v0.21.0 | Same shared workflow | `graft trail pull` also applies accepted agent context-file changes; `graft claude-md pull` delegates to it; push supports early and compressed/chunked uploads |
 | v0.21.1 | Same shared workflow | Same boundaries as v0.21.0; pull reports suggestion counts and review links even when no changes have been accepted |
 | v0.22.0 | Same shared code-map workflow; see [Trail-code](#trail-code-v0220) | Two package/CLI names; different `check` meanings and MCP names; local learnings replace cached brain-rule attachment |
+| v0.23.0 | Same shared code-map workflow; also see [v0.23.0](#trail-code-v0230) | Trail map directory can migrate to `.trail/cache/`; pass the active graph path to the helper; Claude wiring upkeep changes |
 | Unlisted, unknown, or prerelease | Ordinary file search and source reading, or an already available reviewed runtime | Report the version or uncertainty once; do not guess compatibility from the version number or GraphV1 schema |
 
 An unreviewed runtime does not stop the user's development task or authorize an upgrade.
@@ -60,7 +61,7 @@ The graph remains in `graft/.graph/wiring.json`; `.trail/` stores learnings, not
 | Check changes against learnings and skills | Not the graph freshness command | `trail check` |
 | MCP tools | `graft_*` | `trail_*` with the same suffix and arguments |
 
-A `graft mcp` server advertises the six `graft_*` tools; a `trail mcp` server advertises their six `trail_*` counterparts.
+For an indexed repository, a `graft mcp` server advertises the six `graft_*` tools; a `trail mcp` server advertises their six `trail_*` counterparts.
 Both accept both sets of tool names, but call the connected server's advertised tool when available and verify that server's own name and version.
 Do not substitute `trail check` for `graft check`, or use historical `graft trail`/`graft brain` push/pull/connect instructions on v0.22.0: those command groups are absent.
 Search results can include local learnings through the shared engine, even under the `graft` name; interpret them using [Retrieval](retrieval.md#interpret-attached-learnings).
@@ -84,6 +85,37 @@ Anonymous telemetry is separate from source/API/cloud transmission; preserve exi
 When a native parser cannot load, the build can succeed using a WASM stand-in and report `basic parsing only`.
 Treat that language's symbols and edges as reduced structural evidence: inspect the relevant source before claiming precise call relationships or complete impact coverage.
 Do not follow the printed global reinstall advice automatically; parser installation is a separate environment change.
+
+## Trail-code v0.23.0
+
+The package names, command/MCP mappings, parser fallback, and learning/cloud boundaries described for [v0.22.0](#trail-code-v0220) still apply.
+The graph schema and summary helper contract are unchanged, but the default map directory now depends on repository state under either executable name:
+
+- An existing `.trail/cache/` takes precedence.
+- Otherwise, `.trail/learnings/` or Trail hook wiring selects `.trail/cache/`.
+- Other repositories retain `graft/`; running the `trail` executable alone does not select the new location.
+- An explicit runtime directory override takes precedence; keep retrieval, helper access, and the subsequent build on the same directory.
+
+The graph is `.graph/wiring.json` beneath the active map directory.
+After native retrieval, pass `--graph .trail/cache/.graph/wiring.json` on every helper command for a Trail map; the helper's default remains `graft/.graph/wiring.json` and it does not perform native directory discovery or migration.
+For a custom directory, pass its checkout-local graph path explicitly; do not choose whichever of two graphs happens to exist.
+See [Enrichment](enrichment.md#use-the-helper) for the command sequence.
+
+### Directory migration and wiring
+
+Resolving the default map directory can rename an existing `graft/` map to `.trail/cache/` and add `cache/` to `.trail/.gitignore`, even during retrieval or a freshness check.
+`GRAFT_NO_TRAIL_SWITCH=1` blocks the brand-switch decision, not this directory migration; the ignore-file build flags do not disable migration either.
+When those moves or writes are outside the authorized scope, use ordinary source reading instead of invoking default directory resolution.
+Do not manually move the map to repair retrieval.
+The native migration protects a Git-tracked `graft/INDEX.md`, but still selects the new directory; a failed or skipped move does not prove the old graph is active.
+Resolve a missing active graph through the shared missing-index policy, preserving the old files.
+
+Claude wiring upkeep can move the shared hook to `.trail/hook.cjs`, retain a shared SessionStart entry, move other settings to `.claude/settings.local.json`, and place the skill under the user's Claude home.
+It also removes the Claude MCP entry previously installed by init; Cursor's MCP setup remains supported, and both CLI MCP entrypoints still exist.
+These are native wiring operations, not required changes to an existing Codex MCP configuration.
+Background branch refresh can additionally query GitHub pull-request status through `gh`; `TRAIL_NO_FETCH=1` suppresses its network fetch and PR lookup, not local branch-cache work or cloud synchronization.
+The background migration reader now includes past PR reviews as well as Claude sessions; ordinary retrieval does not authorize either.
+The existing opt-out and fallback rules remain necessary, including for upkeep in an already wired repository.
 
 ## Evidence and verification limits
 
@@ -119,3 +151,17 @@ The snapshot's 88 selected upstream tests passed for refresh, worktree seeding, 
 These source tests used the temporary packages' dependencies and `tsx`, with a temporary home, telemetry disabled, remote branch fetching disabled, and inherited ignore-file opt-outs removed for tests that expect default ignore-file creation.
 The published-package checks and snapshot tests are separate evidence; a shared version number does not prove identical source provenance.
 Live cloud synchronization, automatic migration of a real wired checkout, and API-backed deep enrichment were not exercised end to end.
+
+
+For v0.23.0, the official source snapshot [ead585b](https://github.com/trailhq/Trail-Code/tree/ead585b2707055f47f1e97d9b0d4209af5285805) was compared with the reviewed v0.22.0 snapshot `3f10899`.
+The graph and MCP source directories and `src/ask/index-file.ts` are unchanged; directory resolution, query follow-up, and wiring/migration changes were inspected separately.
+Both published npm packages were installed in a temporary directory and exercised on Node 24.12.0 with a temporary home, telemetry disabled, brand migration disabled, and remote branch fetching disabled.
+Both entrypoints passed CLI version, local build, helper application/no-op, ready-summary protection, stale-source rejection, query-time stale marking, and rebuilt-summary retrieval checks.
+Creating `.trail/learnings/` in the isolated fixtures then exercising native retrieval confirmed directory migration, the ignore entry, and summary preservation; explicit helper paths worked before and after migration.
+Both MCP entrypoints reported v0.23.0 and advertised six tools with their respective prefixes for an indexed fixture.
+
+The snapshot passed 92 selected upstream tests for refresh, seeding, graph serialization, ask indexes, MCP tools/server, native-parser fallback, and map-directory selection/migration.
+These source tests reused locally available dependencies and `tsx`; they were not a clean source installation.
+An initial sandboxed run encountered child-process `EPERM` failures and hangs; the complete selected suite passed outside that restriction with the same isolated home and environment controls.
+Published-package checks and snapshot tests remain separate evidence, not a claim of identical source provenance.
+Live cloud/PR services, real agent-wiring migration, and API-backed deep enrichment were not exercised end to end.

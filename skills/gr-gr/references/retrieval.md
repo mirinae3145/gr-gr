@@ -6,6 +6,7 @@ The examples use `graft`; for a verified `trail` runtime, apply the [command and
 
 ## Access or create an authorized index
 
+For v0.23.0, first check the [directory migration boundary](compatibility.md#directory-migration-and-wiring); even path resolution can move the map and update `.trail/.gitignore`.
 Start with the retrieval needed for the task, targeting the intended repository or worktree root explicitly where supported.
 Do not gate retrieval on the local presence of `graft/.graph/wiring.json`: the reviewed runtimes check freshness before retrieval and can seed a linked worktree from its main checkout's existing graph, then refresh it for the worktree's source.
 This reuses an existing index; a repository with neither its own graph nor a seedable parent graph is not automatically indexed.
@@ -50,7 +51,7 @@ Its optional repository-root argument is not a path-prefix filter.
 Do not assume options are shared across subcommands; check `graft <command> --help` when unsure.
 Use `--full` or read the referenced source range when a compact excerpt is insufficient; do not reopen a whole file merely to recover code already returned.
 Ranked retrieval is not exhaustive, and graph edges are derived evidence rather than proof of runtime dispatch.
-On v0.22.0, a `basic parsing only` warning means a language fell back from native parsing; do not infer complete or precise call coverage from a successful build.
+On v0.22.0/v0.23.0, a `basic parsing only` warning means a language fell back from native parsing; do not infer complete or precise call coverage from a successful build.
 Resolve declaration/implementation duplicates by path, node ID, and source span, not by name alone.
 
 For files outside the index or an unavailable Graft executable, continue with ordinary file search and source reading.
@@ -69,7 +70,7 @@ Check a stale rule's source and current implementation before relying on it; do 
 
 ## Interpret attached learnings
 
-On v0.22.0, the shared query engine attaches locally available learnings instead of the older brain-rule cache.
+On v0.22.0/v0.23.0, the shared query engine attaches locally available learnings instead of the older brain-rule cache.
 They can come from the repository's `.trail/` or the user's Trail home and can appear through CLI or MCP under either product name.
 Treat decisions and preferences as historical context to check against current source and governing instructions, separately from symbol summaries.
 The older rules' body-fingerprint `STALE` contract does not establish learning freshness; absence of that flag is not proof that a learning still applies.
