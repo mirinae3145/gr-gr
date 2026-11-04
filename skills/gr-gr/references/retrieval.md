@@ -17,11 +17,13 @@ A checkout without its own graph follows the missing-index policy below.
 If retrieval reports no graph, check the index-creation authorization defined in [Shared boundaries](../SKILL.md#shared-boundaries).
 When authorized for this repository, run one normal `graft build <repo-root> --no-gitignore --no-ignore` with a reviewed CLI runtime, then retry the needed retrieval.
 The flags suppress normal build-time ignore-file writes, but not v0.23.0 directory migration; do not use either init command or add `--deep` under local-index authorization.
-If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index and continue with ordinary file search and source reading.
+If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index.
+In either case, continue with ordinary file search and source reading.
 
 ## Keep the index fresh
 
-After an index is available, let the next retrieval handle source edits and branch changes; do not add a session-start build, branch/HEAD bookkeeping, or a build before each query.
+After an index is available, let the next retrieval handle source edits and branch changes.
+Do not add a session-start build, branch/HEAD bookkeeping, or a build before each query.
 Automatic refresh is structural only; it does not regenerate stale semantic summaries or update Markdown cards.
 Semantic enrichment is inactive in the default workflow.
 Treat stale summaries as unverified context and check the current source before relying on them.
@@ -29,7 +31,9 @@ Treat stale summaries as unverified context and check the current source before 
 Respect `--no-refresh`, `GRAFT_NO_REFRESH`, and filesystem-write restrictions; do not bypass a refresh restriction with a manual build.
 An authorized new local build with seeding disabled is allowed; copying or seeding another checkout's graph is not.
 Graft can answer from the old graph when refresh fails or a rebuild remains busy, so a successful query alone does not guarantee freshness.
-If Graft is unavailable or reports a skipped/failed refresh, report the limitation and use ordinary source search until freshness is restored; retry a busy operation after the competing writer finishes.
+If Graft is unavailable or reports a skipped/failed refresh, report the limitation and use ordinary source search until freshness is restored.
+Retry a busy operation after the competing writer finishes.
+
 Do not overlap retrieval that may refresh with a build or another graph writer in the same checkout.
 
 ## Choose context economically
@@ -50,6 +54,7 @@ When the relevant symbol or file is already known, use the matching targeted pri
 
 Use one retrieval that fits the current need, then act on its result.
 Do not repeatedly rephrase an unsuccessful `ask`; switch to exhaustive search, structural traversal, or the precise source range that is missing.
+
 ## Check each command's options
 
 Use `--in <scope>/` only with `graft ask`, `graft grep`, or `graft callers` to narrow results to a repo-relative path prefix.
@@ -57,6 +62,7 @@ Use `--in <scope>/` only with `graft ask`, `graft grep`, or `graft callers` to n
 Its optional repository-root argument is not a path-prefix filter.
 `graft skeleton` does not support `--in`: pass the repo-relative file path as `<file>` instead.
 Do not assume options are shared across subcommands; check `graft <command> --help` when unsure.
+
 ## Interpret results and fall back
 
 Use `--full` or read the referenced source range when a compact excerpt is insufficient; do not reopen a whole file merely to recover code already returned.
@@ -68,5 +74,6 @@ For files outside the index or an unavailable Graft executable, continue with or
 
 ## Check the affected neighborhood
 
-After changing behavior that may affect callers, dependencies, shared interfaces, or cross-file control flow, use the structural graph to check the affected neighborhood before considering the implementation complete.
+After changing behavior that may affect callers, dependencies, shared interfaces, or cross-file control flow, use the structural graph to check the affected neighborhood.
+Do this before considering the implementation complete.
 Prefer targeted traversal from the changed symbols; do not perform this check mechanically after every edit.

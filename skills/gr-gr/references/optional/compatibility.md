@@ -20,7 +20,8 @@ These are exact reviewed releases, not an inferred continuous version range or a
 | Unlisted, unknown, or prerelease | Ordinary file search and source reading, or an already available reviewed runtime | Report the version or uncertainty once; do not guess compatibility from the version number or GraphV1 schema |
 
 An unreviewed runtime does not stop the user's development task or authorize an upgrade.
-Do not start a compatibility investigation during ordinary code work merely to enable Graft; review another version when that is part of the user's task, then extend this table using source and test evidence.
+Do not start a compatibility investigation during ordinary code work merely to enable Graft.
+When reviewing another version is part of the user's task, extend this table using source and test evidence.
 If CLI and MCP use different reviewed releases, apply each runtime's row to its own operations.
 An incompatible result or storage layout overrides the table: stop Graft use and report the mismatch.
 
@@ -35,13 +36,16 @@ There is no legacy session-start or branch-switch build workflow to restore for 
 On v0.18.0/v0.19.0 the upload, connection, and rule-pull commands are `graft brain push`, `graft brain connect`, and `graft brain pull`; on v0.20.0/v0.21.0/v0.21.1 they are `graft trail push`, `graft trail connect`, and `graft trail pull`.
 All require explicit user opt-in to their side effects under the shared skill policy.
 Pull fetches rules and rewrites agent instruction files; upload and connection are not ordinary retrieval operations.
-In v0.20.0/v0.21.0/v0.21.1, interactive push in an unwired repository can invoke init, including graph creation, agent configuration, hooks, and global settings; non-interactive push can still upload without initializing.
-On v0.21.0/v0.21.1, pull additionally applies changes accepted in Trail to agent context files, including `CLAUDE.md`, `AGENTS.md`, folder instructions, Cursor rules, and Claude skills.
-`graft claude-md pull` delegates to this broader pull, so authorization for one file does not authorize changes to every context file.
-`graft trail pull --dry-run` skips local writes and applied-change acknowledgements, but still contacts Trail; it is not an offline retrieval operation.
+
+In v0.20.0/v0.21.0/v0.21.1, interactive push in an unwired repository can invoke init, including graph creation, agent configuration, hooks, and global settings.
+Non-interactive push can still upload without initializing.
 Push can send instruction files and recent pull-request discussions before the full digest, and may use compressed/chunked uploads; neither behavior changes the opt-in requirement.
 Do not use either command spelling to bypass the initialization prohibition.
 The init flag names in the table describe compatibility, not permission to invoke init.
+
+On v0.21.0/v0.21.1, pull additionally applies changes accepted in Trail to agent context files, including `CLAUDE.md`, `AGENTS.md`, folder instructions, Cursor rules, and Claude skills.
+`graft claude-md pull` delegates to this broader pull, so authorization for one file does not authorize changes to every context file.
+`graft trail pull --dry-run` skips local writes and applied-change acknowledgements, but still contacts Trail; it is not an offline retrieval operation.
 
 ## Trail-code v0.22.0
 
@@ -64,17 +68,21 @@ Search results can include local learnings through the shared engine, even under
 
 ### Wiring and side effects
 
-`graft upgrade` now installs the `trail` command too.
-Existing Claude-wired repositories can migrate when upkeep runs with `trail` available, including MCP startup: agent wiring can be rewritten and a background read of past Claude sessions can start.
-`GRAFT_NO_TRAIL_SWITCH=1` opts out of that automatic migration; it does not disable all existing wiring upkeep, telemetry, or cloud operations.
-When migration is outside the task's authorization, use that process-local opt-out before starting a runtime that could migrate a wired repository; do not change persistent configuration as a side effect of retrieval.
-If existing upkeep would still exceed the permitted write scope, use ordinary source reading instead.
-
-`trail ask` in a repository that keeps learnings can refresh teammate branch data in the background and, when a workspace is connected, record reuse activity and schedule cloud synchronization.
-A preexisting connection is not authorization for those effects; choose a verified code-only retrieval path or ordinary source reading when they are outside scope.
-`TRAIL_NO_FETCH=1` suppresses the branch fetch, not workspace synchronization.
-`trail note`, `trail learn`, `trail skills fold`, and workspace/login operations are separate from symbol-summary enrichment and require their own task authorization.
-Anonymous telemetry is separate from source/API/cloud transmission; preserve existing preferences, and use `DO_NOT_TRACK=1` to disable telemetry during temporary verification when needed; it does not suppress registry update checks or workspace traffic.
+- **Brand migration**: `graft upgrade` now installs the `trail` command too.
+  Existing Claude-wired repositories can migrate when upkeep runs with `trail` available, including MCP startup.
+  Migration can rewrite agent wiring and start a background read of past Claude sessions.
+- **Migration opt-out**: `GRAFT_NO_TRAIL_SWITCH=1` opts out of that automatic migration; it does not disable all existing wiring upkeep, telemetry, or cloud operations.
+  When migration is outside the task's authorization, use that process-local opt-out before starting a runtime that could migrate a wired repository.
+  Do not change persistent configuration as a side effect of retrieval.
+  If existing upkeep would still exceed the permitted write scope, use ordinary source reading instead.
+- **Learning reuse**: In a repository that keeps learnings, `trail ask` can refresh teammate branch data in the background.
+  When a workspace is connected, it can also record reuse activity and schedule cloud synchronization.
+  A preexisting connection is not authorization for those effects; choose a verified code-only retrieval path or ordinary source reading when they are outside scope.
+  `TRAIL_NO_FETCH=1` suppresses the branch fetch, not workspace synchronization.
+- **Separate operations and telemetry**: `trail note`, `trail learn`, `trail skills fold`, and workspace/login operations are separate from symbol-summary enrichment and require their own task authorization.
+  Anonymous telemetry is separate from source/API/cloud transmission.
+  Preserve existing preferences, and use `DO_NOT_TRACK=1` to disable telemetry during temporary verification when needed.
+  It does not suppress registry update checks or workspace traffic.
 
 ### Parser fallback
 
@@ -99,19 +107,22 @@ The graph is `.graph/wiring.json` beneath the active map directory.
 
 ### Directory migration and wiring
 
-Resolving the default map directory can rename an existing `graft/` map to `.trail/cache/` and add `cache/` to `.trail/.gitignore`, even during retrieval or a freshness check.
-`GRAFT_NO_TRAIL_SWITCH=1` blocks the brand-switch decision, not this directory migration; the ignore-file build flags do not disable migration either.
-When those moves or writes are outside the authorized scope, use ordinary source reading instead of invoking default directory resolution.
-Do not manually move the map to repair retrieval.
-The native migration protects a Git-tracked `graft/INDEX.md`, but still selects the new directory; a failed or skipped move does not prove the old graph is active.
-Resolve a missing active graph through the shared missing-index policy, preserving the old files.
-
-Claude wiring upkeep can move the shared hook to `.trail/hook.cjs`, retain a shared SessionStart entry, move other settings to `.claude/settings.local.json`, and place the skill under the user's Claude home.
-It also removes the Claude MCP entry previously installed by init; Cursor's MCP setup remains supported, and both CLI MCP entrypoints still exist.
-These are native wiring operations, not required changes to an existing Codex MCP configuration.
-Background branch refresh can additionally query GitHub pull-request status through `gh`; `TRAIL_NO_FETCH=1` suppresses its network fetch and PR lookup, not local branch-cache work or cloud synchronization.
-The background migration reader now includes past PR reviews as well as Claude sessions; ordinary retrieval does not authorize either.
-The existing opt-out and fallback rules remain necessary, including for upkeep in an already wired repository.
+- **Directory resolution**: Resolving the default map directory can rename an existing `graft/` map to `.trail/cache/` and add `cache/` to `.trail/.gitignore`.
+  This can happen even during retrieval or a freshness check.
+  `GRAFT_NO_TRAIL_SWITCH=1` blocks the brand-switch decision, not this directory migration; the ignore-file build flags do not disable migration either.
+  When those moves or writes are outside the authorized scope, use ordinary source reading instead of invoking default directory resolution.
+  Do not manually move the map to repair retrieval.
+- **Graph preservation**: The native migration protects a Git-tracked `graft/INDEX.md`, but still selects the new directory.
+  A failed or skipped move does not prove the old graph is active.
+  Resolve a missing active graph through the shared missing-index policy, preserving the old files.
+- **Claude wiring**: Claude wiring upkeep can move the shared hook to `.trail/hook.cjs` and retain a shared SessionStart entry.
+  It can move other settings to `.claude/settings.local.json` and place the skill under the user's Claude home.
+  It also removes the Claude MCP entry previously installed by init; Cursor's MCP setup remains supported, and both CLI MCP entrypoints still exist.
+  These are native wiring operations, not required changes to an existing Codex MCP configuration.
+- **Background activity**: Background branch refresh can additionally query GitHub pull-request status through `gh`.
+  `TRAIL_NO_FETCH=1` suppresses its network fetch and PR lookup, not local branch-cache work or cloud synchronization.
+  The background migration reader now includes past PR reviews as well as Claude sessions; ordinary retrieval does not authorize either.
+  The existing opt-out and fallback rules remain necessary, including for upkeep in an already wired repository.
 
 ## Evidence and verification limits
 
@@ -128,16 +139,21 @@ Each of v0.16.0, v0.18.0, and v0.19.0 passed 73 focused upstream tests for refre
 Cached rule attachment and stale flags were also checked on v0.18.0 and v0.19.0.
 These runs used tagged sources in temporary directories with locally available dependencies and `tsx`, not clean installations of each historical release.
 Focused installed v0.20.0 CLI/MCP checks passed for missing-index behavior, refresh and worktree seeding, and cached Trail rule attachment; 77 selected upstream tests passed as well.
+
 Live Trail service operations and API-backed deep enrichment were not validated end to end.
 These observations cover the skill's workflow, not every command or integration in each release.
 
 ### Evidence for v0.21.0 and v0.21.1
 
-The same lifecycle, CLI retrieval dispatch, and MCP tools were compared against official tags [v0.21.0](https://github.com/trailhq/Graft/tree/v0.21.0) (`b7646fb`) and [v0.21.1](https://github.com/trailhq/Graft/tree/v0.21.1) (`375a37e`).
-The graph, ask, context, and MCP source directories are unchanged from v0.20.0 in both tags; CLI changes concern initialization and Trail operations rather than retrieval dispatch.
+The lifecycle, CLI retrieval dispatch, and MCP tools were also compared against official tags [v0.21.0](https://github.com/trailhq/Graft/tree/v0.21.0) (`b7646fb`) and [v0.21.1](https://github.com/trailhq/Graft/tree/v0.21.1) (`375a37e`).
+The graph, ask, context, and MCP source directories are unchanged from v0.20.0 in both tags.
+CLI changes concern initialization and Trail operations rather than retrieval dispatch.
 The new Trail pull, context-file patching, early upload, and compressed/chunked upload paths were inspected separately to establish the expanded side effects above.
-Selected upstream tests for refresh, seeding, graph serialization, ask indexes, MCP tools, context-file pull, and uploads passed on both tags: 97 tests on v0.21.0 and 100 on v0.21.1.
-These runs used tagged sources in temporary directories with `tsx` and locally built parser dependencies; v0.21.0 reused v0.21.1's dependencies, whose lockfile differs only in the package version.
+
+Selected upstream tests covered refresh, seeding, graph serialization, ask indexes, MCP tools, context-file pull, and uploads.
+They passed on both tags: 97 tests on v0.21.0 and 100 on v0.21.1.
+These runs used tagged sources in temporary directories with `tsx` and locally built parser dependencies.
+The v0.21.0 run reused v0.21.1's dependencies, whose lockfile differs only in the package version.
 They were not clean installed-release CLI/MCP checks, and Trail network behavior used upstream test doubles rather than the live service.
 
 ### Evidence for v0.22.0
@@ -146,10 +162,13 @@ For v0.22.0, both published npm packages were installed in temporary directories
 CLI checks confirmed the two versions, the distinct `check` help, and local graph creation.
 Both MCP entrypoints reported v0.22.0 and their own server names, advertised six appropriately named tools, and accepted both `graft_repo_map` and `trail_repo_map` calls.
 
-The source comparison used v0.21.1 (`375a37e`) and the official repository snapshot [3f10899](https://github.com/trailhq/Trail-Code/tree/3f10899e2fcee1fc990e8c11f27085016d79d0de), whose package version is 0.22.0; no official v0.22.0 Git tag was available at review time.
+The source comparison used v0.21.1 (`375a37e`) and official repository snapshot [3f10899](https://github.com/trailhq/Trail-Code/tree/3f10899e2fcee1fc990e8c11f27085016d79d0de), whose package version is 0.22.0.
+No official v0.22.0 Git tag was available at review time.
 `src/graph/types.ts`, `src/graph/enrich.ts`, `src/graph/seed.ts`, and `src/ask/index-file.ts` are unchanged between those revisions.
 The snapshot's 88 selected upstream tests passed for refresh, worktree seeding, graph serialization, ask sidecars, MCP tools/server, native-parser fallback, and learning attachment.
-These source tests used the temporary packages' dependencies and `tsx`, with a temporary home, telemetry disabled, remote branch fetching disabled, and inherited ignore-file opt-outs removed for tests that expect default ignore-file creation.
+
+These source tests used the temporary packages' dependencies and `tsx`, with a temporary home, telemetry disabled, and remote branch fetching disabled.
+Inherited ignore-file opt-outs were removed for tests that expect default ignore-file creation.
 The published-package checks and snapshot tests are separate evidence; a shared version number does not prove identical source provenance.
 Live cloud synchronization, automatic migration of a real wired checkout, and API-backed deep enrichment were not exercised end to end.
 
@@ -157,7 +176,9 @@ Live cloud synchronization, automatic migration of a real wired checkout, and AP
 
 For v0.23.0, the official source snapshot [ead585b](https://github.com/trailhq/Trail-Code/tree/ead585b2707055f47f1e97d9b0d4209af5285805) was compared with the reviewed v0.22.0 snapshot `3f10899`.
 The graph and MCP source directories and `src/ask/index-file.ts` are unchanged; directory resolution, query follow-up, and wiring/migration changes were inspected separately.
-Both published npm packages were installed in a temporary directory and exercised on Node 24.12.0 with a temporary home, telemetry disabled, brand migration disabled, and remote branch fetching disabled.
+
+Both published npm packages were installed in a temporary directory and exercised on Node 24.12.0 with a temporary home.
+Telemetry, brand migration, and remote branch fetching were disabled.
 Both entrypoints passed CLI version and local build checks.
 Creating `.trail/learnings/` in the isolated fixtures then exercising native retrieval confirmed directory migration, and the ignore entry.
 Both MCP entrypoints reported v0.23.0 and advertised six tools with their respective prefixes for an indexed fixture.
