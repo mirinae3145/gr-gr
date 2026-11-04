@@ -6,19 +6,25 @@ Only the `graft` CLI is active by default.
 
 ## Access or create an authorized index
 
-For v0.23.0, first check the [directory migration boundary](compatibility.md#side-effects-under-the-graft-name); even path resolution can move the map and update `.trail/.gitignore`.
-Apply the environment requirement in [Shared boundaries](../SKILL.md#shared-boundaries) before the commands below.
+Before retrieval, establish the checkout's index and permission to create it:
+
+1. For v0.23.0/v0.28.1, first check the [directory migration boundary](compatibility.md#side-effects-under-the-graft-name); even path resolution can move the map and update `.trail/.gitignore`.
+   Apply the environment requirement in [Shared boundaries](../SKILL.md#shared-boundaries) before invoking Graft.
+1. On v0.28.1, before the checkout's first retrieval, inspect the filesystem for `<map-dir>/.graph/wiring.json` without invoking Graft's path resolver or a query.
+   Use the existing directory override when configured; otherwise determine whether `graft/` or `.trail/cache/` applies under the directory migration boundary.
+   If the effective path is unclear or would require an unrequested migration, use ordinary source reading.
+   If the graph is missing, apply the build-authorization rule before any query; do not let retrieval start the first build.
+1. If the filesystem check or retrieval reports no graph, check the index-creation authorization defined in [Shared boundaries](../SKILL.md#shared-boundaries).
+   When authorized for this repository, run one normal `graft build <repo-root> --no-gitignore --no-ignore` with a reviewed CLI runtime, then retry the needed retrieval.
+
+   The flags suppress normal build-time ignore-file writes, but not v0.23.0/v0.28.1 directory migration.
+   Do not use either init command or add `--deep` under local-index authorization.
+   If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index.
+   In either case, continue with ordinary file search and source reading.
 
 Start with the retrieval needed for the task, targeting the intended repository or worktree root explicitly where supported.
 Let retrieval check freshness of the target checkout's own index.
 Cross-checkout seeding is disabled even when the main checkout has a usable graph; do not copy it or redirect retrieval to it.
-A checkout without its own graph follows the missing-index policy below.
-
-If retrieval reports no graph, check the index-creation authorization defined in [Shared boundaries](../SKILL.md#shared-boundaries).
-When authorized for this repository, run one normal `graft build <repo-root> --no-gitignore --no-ignore` with a reviewed CLI runtime, then retry the needed retrieval.
-The flags suppress normal build-time ignore-file writes, but not v0.23.0 directory migration; do not use either init command or add `--deep` under local-index authorization.
-If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index.
-In either case, continue with ordinary file search and source reading.
 
 ## Keep the index fresh
 
@@ -67,9 +73,11 @@ Do not assume options are shared across subcommands; check `graft <command> --he
 
 Use `--full` or read the referenced source range when a compact excerpt is insufficient; do not reopen a whole file merely to recover code already returned.
 Ranked retrieval is not exhaustive, and graph edges are derived evidence rather than proof of runtime dispatch.
-On v0.22.0/v0.23.0, a `basic parsing only` warning means a language fell back from native parsing; do not infer complete or precise call coverage from a successful build.
+On v0.22.0/v0.23.0/v0.28.1, a `basic parsing only` warning means a language fell back from native parsing; do not infer complete or precise call coverage from a successful build.
 Resolve declaration/implementation duplicates by path, node ID, and source span, not by name alone.
 
+On v0.28.1, a zero-hit text response from `grep` can name Git-ignored code that was not searched.
+Use ordinary source search in relevant omitted paths; do not change ignore rules or expand the index just to follow that diagnostic.
 For files outside the index or an unavailable Graft executable, continue with ordinary file search and source reading.
 
 ## Check the affected neighborhood

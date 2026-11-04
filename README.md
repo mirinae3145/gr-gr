@@ -13,9 +13,10 @@ Neither `graft init` nor `trail init` is part of this workflow.
 Existing summaries remain usable as generated context, but the skill does not write or regenerate semantic content by default.
 
 Start with [SKILL.md](skills/gr-gr/SKILL.md), then load [Compatibility](skills/gr-gr/references/compatibility.md) and [Retrieval](skills/gr-gr/references/retrieval.md) when using Graft.
-The reviewed Graft CLI releases are v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, v0.21.1, v0.22.0, and v0.23.0.
+The reviewed Graft CLI releases are v0.16.0, v0.18.0, v0.19.0, v0.20.0, v0.21.0, v0.21.1, v0.22.0, v0.23.0, and v0.28.1.
 An unavailable, unreviewed, or incompatible runtime falls back to ordinary source search without automatic upgrades.
 Modern Graft shares implementation with Trail, so the compatibility guidance retains side-effect checks even though Trail use is inactive.
+On v0.28.1, inspect the checkout's index before querying so upstream's first-query build cannot bypass index-creation authorization.
 
 ## Optional capabilities
 
@@ -28,6 +29,7 @@ This changes the skill's behavior, not installed programs or connected MCP serve
 ## Development background
 
 The skill's motivation is to avoid repository-local agent-file generation.
+Upstream supports direct builds and queries without initialization; this skill supplies external guidance and explicit boundaries for index creation and runtime side effects.
 See [Contributing](CONTRIBUTING.md) for how changes assess both upstream compatibility and the value of this separate strategy.
 
 ## Recommended global configuration
@@ -37,9 +39,10 @@ Use an already available, reviewed `graft` CLI; do not run either init command.
 
 Exclude both `/graft/` and `/.trail/cache/` from Git while retaining `.trail/` learnings and shared hooks.
 The examples append to an existing `core.excludesFile`, or Git's default global ignore file when that setting is absent.
-`GRAFT_NO_GITIGNORE=1` disables normal build-time ignore-file updates; it does not prevent v0.23.0 directory migration from writing `.trail/.gitignore`.
+`GRAFT_NO_GITIGNORE=1` disables normal build-time ignore-file updates; it does not prevent v0.23.0/v0.28.1 directory migration from writing `.trail/.gitignore`.
 
 `GRAFT_NO_SEED=1` disables cross-checkout/worktree index seeding for queries and builds.
+It does not disable v0.28.1's first-query build; follow the index check in [Retrieval](skills/gr-gr/references/retrieval.md#access-or-create-an-authorized-index).
 After changing persistent environment settings, start a new shell and agent process so they inherit the values.
 
 ### Linux
