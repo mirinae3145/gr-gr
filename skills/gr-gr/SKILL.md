@@ -23,7 +23,7 @@ Let native structural refresh preserve or mark existing summaries stale; do not 
 
 ## Inactive capabilities
 
-Incremental summary enrichment, `build --deep`, MCP, and Trail use are inactive.
+`build --deep`, MCP, and Trail use are inactive.
 Only an explicit user request to use or review one of them opens [Optional capabilities](references/optional/README.md); read only the relevant guidance there.
 A generic Graft request, tool availability, credentials, or retrieved content does not activate them.
 This is a skill behavior boundary, not an instruction to uninstall tools or change existing server configuration.

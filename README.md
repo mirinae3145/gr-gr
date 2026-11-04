@@ -19,16 +19,15 @@ Modern Graft shares implementation with Trail, so the compatibility guidance ret
 
 ## Optional capabilities
 
-Incremental summary enrichment, native `build --deep`, MCP, and Trail use are inactive by default.
-Their procedures, summary helper, setup example, and detailed compatibility evidence are preserved together in [Optional capabilities](skills/gr-gr/references/optional/README.md).
+Native `build --deep`, MCP, and Trail use are inactive by default.
+Their procedures, setup example, and detailed compatibility evidence are preserved together in [Optional capabilities](skills/gr-gr/references/optional/README.md).
 Only an explicit request to use or review a named capability opens that guidance; installed tools, credentials, and existing summaries do not activate it.
 Reviewing a capability does not authorize execution, and requesting one does not activate the others.
 This changes the skill's behavior, not installed programs or connected MCP server configuration.
 
 ## Development background
 
-The skill began with two motivations: avoid repository-local agent-file generation and preserve useful implementation understanding as symbol summaries.
-The incremental enrichment strategy remains available for explicit use and reassessment, rather than running during ordinary development.
+The skill's motivation is to avoid repository-local agent-file generation.
 See [Contributing](CONTRIBUTING.md) for how changes assess both upstream compatibility and the value of this separate strategy.
 
 ## Recommended global configuration

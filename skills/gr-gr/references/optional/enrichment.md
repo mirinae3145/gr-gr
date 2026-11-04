@@ -1,63 +1,32 @@
-# Enrichment
+# Native deep enrichment
 
 Read only after explicit activation through [Optional capabilities](README.md).
-First select a reviewed runtime via [Compatibility](compatibility.md), then follow [Retrieval](../retrieval.md) to access the target checkout's graph before helper `inspect`/`select` or a deep build.
+First select a reviewed runtime via [Compatibility](compatibility.md), then follow [Retrieval](../retrieval.md) to access the target checkout's graph before a deep build.
 If retrieval is already complete and the source and checkout are unchanged, reuse it.
-Verify the CLI version too before applying helper updates when retrieval used MCP: the batch may need a CLI build.
-GraphV1's `meta.version: 1` is a storage schema, not the installed runtime version.
 The examples retain `graft`; a reviewed `trail` runtime can use the corresponding code-map commands under [Compatibility](compatibility.md#trail-code-v0220).
-On v0.22.0/v0.23.0, learnings in `.trail/learnings/` or the personal Trail home are separate from these symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
+On v0.22.0/v0.23.0, learnings in `.trail/learnings/` or the personal Trail home are separate from symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
 
-## Enrich selected symbols
-
-Apply the enrichment criteria in [Optional capabilities](README.md#incremental-enrichment-criteria) before entering this workflow.
-Do not inspect or select nodes solely because they were read or edited, or to clear every missing or `stale` summary.
-
-At the first enrichment in a session for a repository, run the helper's `inspect` command.
-Retain the supported schema in session context; do not repeat schema discovery unless the repository uses a different schema, Graft is upgraded, or a compatibility error occurs.
-The helper still checks current hashes and required fields on every write.
-
-For a symbol that warrants enrichment, select its node once you have read enough of the implementation to explain it reliably.
-Check the stored state: absence from an `ask` response does not prove the graph lacks a summary.
-Preserve useful `ready` summaries and write or refresh summaries only for the selected scope.
-If a stale summary still describes the implementation accurately and no new reusable understanding warrants enrichment, leave it stale rather than rewriting it merely to restore `ready` state.
-Do not read unrelated code solely to fill summaries during an ordinary development task.
-If the source is incomplete or unclear, leave the node pending rather than guessing.
-
-Write one concise sentence about current responsibility, important behavior, or an invariant that helps distinguish the symbol during later retrieval.
-Include consequential side effects or failure behavior when useful.
-Do not merely restate a signature or put review findings, proposed changes, or repository policy into a summary.
-Do not infer an implementation from a declaration alone.
-
-After source edits or a checkout change, use the next relevant retrieval to refresh before selecting changed or moved symbols with the helper.
-Reconsider whether enrichment is warranted against the edited implementation; refresh only the summaries that meet those criteria and keep unrelated cached summaries intact.
-Once selected, retain the node ID, body hash, source hash, and prior summary state in the payload while authoring the summary.
-If source or node identity changes before application, refresh through retrieval and select again, then reconsider the summary against the new implementation.
-
-Batch updates at a natural task boundary.
-If the batch changed summaries (`rebuild_required: true`), run `graft build` once after applying it to refresh retrieval indexes and Markdown cards; skip this for a no-op batch.
-Direct summary writes do not change the source fingerprint, so query-time refresh alone may leave the summary tokens in the ask sidecar and the Markdown projections outdated.
-Flush earlier when a later retrieval in the same task needs the new summaries.
-Use `ask` to verify integration on first use or after compatibility changes, not as a mandatory extra query after every batch.
-
-## Select an enrichment route
+## Run a deep pass
 
 | Situation | Route |
 | --- | --- |
-| Incremental enrichment explicitly requested for symbols already read | Agent-authored incremental summaries, whether or not an API is available |
 | Native deep enrichment explicitly requested and API use authorized | Graft's native `graft build --deep` |
-| No usable API configuration for a requested deep pass | Report the limitation; continue structural retrieval, without switching to incremental enrichment unless separately requested |
+| No usable API configuration for a requested deep pass | Report the limitation and continue structural retrieval |
 | Native API enrichment fails | Preserve completed results, report the failure, and continue the development task with the available index |
 
 Use the native deep pass for explicitly requested initial or broader semantic enrichment when the API route is authorized.
 Let Graft generate and cache file summaries, concept maps, and symbol-level meaning according to its own implementation.
 Do not suppress those outputs, invent per-file or per-concept value thresholds, or implement a parallel API summarizer in this skill.
-The incremental helper remains limited to source-symbol summaries; that limit does not apply to native `--deep`.
 
 Honor existing user authorization and provider/model preferences without asking again.
 Credentials being present do not by themselves establish authorization to transmit source or incur API charges.
 Use Graft's existing provider configuration and diagnostics; do not require API setup to perform ordinary Graft-assisted work.
 When API use requires a new user decision, identify the intended repository scope and native command, and continue unrelated work while that decision is pending.
+
+Apply the environment requirement in [Shared boundaries](../../SKILL.md#shared-boundaries) to all CLI operations, including deep builds.
+If enrichment is the first operation, use `graft map` once to enter the local refresh path.
+Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never use or copy the parent checkout's graph.
+Keep any runtime directory override on the build too, following [v0.23.0 directory selection](compatibility.md#trail-code-v0230) when applicable.
 
 Run from the target repository:
 
@@ -65,53 +34,7 @@ Run from the target repository:
 graft build --deep
 ```
 
-A deep pass is a native enrichment operation, not a mandatory step after every source edit or incremental summary batch.
-Let retrieval handle ordinary structural freshness; reserve explicit normal builds for authorized missing-index creation under [Retrieval](../retrieval.md), the helper batch above, or when current Markdown projections are actually needed.
-Finish pending helper updates before starting a deep pass, and do not run them concurrently.
-After a deep pass, select again before applying any remaining payloads so cached summaries and hashes reflect Graft's current output.
+A deep pass is a native enrichment operation, not a mandatory step after every source edit.
+Let retrieval handle ordinary structural freshness; reserve explicit normal builds for authorized missing-index creation under [Retrieval](../retrieval.md) or when current Markdown projections are actually needed.
 Respect native caching and failure reporting; do not clear ready summaries or replace the provider merely to force recomputation.
 Do not infer discounted Batch API pricing from the `--deep` flag.
-
-## Use the helper
-
-Python 3.9 or later and the standard library are sufficient.
-Resolve [scripts/summaries.py](scripts/summaries.py) against this optional bundle directory, not the working repository.
-The examples use `gr_gr_optional` for that directory and `gr_gr_repo` for the target repository.
-
-The helper reads `wiring.json` directly and neither seeds nor refreshes it.
-Apply the environment requirement in [Shared boundaries](../../SKILL.md#shared-boundaries) to all CLI operations below, including deep builds.
-If enrichment is the first operation, use `graft map "$gr_gr_repo"` once to enter the local refresh path.
-Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never point `--graph` at the parent checkout or copy its graph.
-Re-enter retrieval after source or checkout changes before selecting again; the helper's hash and prior-state checks remain required at application time.
-
-Choose the graph path from the verified runtime's active directory after retrieval, following [v0.23.0 directory selection](compatibility.md#trail-code-v0230) when applicable.
-Set `gr_gr_graph` to `graft/.graph/wiring.json`, `.trail/cache/.graph/wiring.json`, or the verified custom directory's graph path within this checkout.
-Pass it consistently to all helper operations; the helper does not interpret `GRAFT_DIR` or native CLI directory options.
-Keep any runtime directory override on the subsequent build too.
-
-```sh
-python "$gr_gr_optional/scripts/summaries.py" inspect --repo "$gr_gr_repo" --graph "$gr_gr_graph"
-python "$gr_gr_optional/scripts/summaries.py" select --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
-    --id 'test/utils.hpp#runAndWait' --output /tmp/gr-gr-selection.json
-```
-
-Use `--path` for a file or directory prefix, or `--all-dirty` only for deliberate bulk selection.
-Selection normally excludes ready nodes; use `--include-ready` only when inspecting or deliberately replacing existing summaries.
-Use `--source` when the exact implementation is needed; otherwise retain the compact payload.
-File nodes are always excluded, even from bulk selection.
-
-Fill each selected entry's `summary` field, remove entries that cannot be summarized reliably, and leave its identity and snapshot fields unchanged.
-The file's `symbols` list may contain only the subset being applied.
-
-```sh
-python "$gr_gr_optional/scripts/summaries.py" apply --repo "$gr_gr_repo" --graph "$gr_gr_graph" \
-    --input /tmp/gr-gr-selection.json
-# Run from the target repository after a batch with rebuild_required: true:
-graft build
-```
-
-The helper validates the entire update before writing, rejects stale source and unintended ready-summary replacement, and saves atomically.
-It preserves structural fields and unrelated nodes; replacing a stale summary also clears any stale crux excerpt.
-Use `--replace-ready` only for an intentional replacement of a selected ready summary.
-Avoid running a build, auto-refreshing retrieval, or another summary writer concurrently with summary application; the helper lock only coordinates helper writers.
-Successful application does not itself rebuild Graft.
