@@ -14,7 +14,7 @@ Choose by the understanding required, not by file type, and keep the user's task
 
 Check `graft --version` before the first use, then read [Compatibility](references/compatibility.md) and [Retrieval](references/retrieval.md).
 Reuse the verified version across repositories using the same executable and environment; recheck after a runtime change or compatibility error.
-If Graft is unavailable, unreviewed, or incompatible, report the limitation once and continue through ordinary source search.
+If Graft is unavailable, unlisted in Compatibility, or incompatible, report the limitation once and continue through ordinary source search.
 Do not automatically install, upgrade, or substitute a different runtime to recover.
 
 Use existing summaries and crux excerpts as generated context; verify stale or questionable content against current source.
