@@ -34,3 +34,7 @@ Preserve the retained procedures and rationale so that reassessment does not req
 Keep dormant procedures out of the default reading path; retain only the side-effect boundaries that still apply to the active Graft executable.
 Reviewing or enabling one optional capability must not silently enable another.
 An explicit request to use an optional capability does not change the default policy or enable cross-checkout seeding; those require a separate decision to change the policy.
+
+## License of contributions
+
+By contributing, you agree to dedicate your contribution to the public domain under [CC0 1.0 Universal](LICENSE.txt).

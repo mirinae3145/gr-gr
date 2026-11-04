@@ -82,3 +82,7 @@ Add-Content -Path $grGrIgnore -Value "`n/graft/`n/.trail/cache/"
 ## AI assistance
 
 This skill was developed with assistance from OpenAI Codex.
+
+## License
+
+This project is dedicated to the public domain under [CC0 1.0 Universal](LICENSE.txt).
