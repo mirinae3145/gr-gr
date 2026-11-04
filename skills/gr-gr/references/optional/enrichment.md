@@ -6,7 +6,7 @@ If retrieval is already complete and the source and checkout are unchanged, reus
 The examples retain `graft`; a reviewed `trail` runtime can use the corresponding code-map commands under [Compatibility](compatibility.md#trail-code-v0220).
 On v0.22.0/v0.23.0, learnings in `.trail/learnings/` or the personal Trail home are separate from symbol summaries; do not use `trail note`, `trail learn`, or skill folding as an enrichment substitute.
 
-## Run a deep pass
+## Choose a route
 
 | Situation | Route |
 | --- | --- |
@@ -18,10 +18,14 @@ Use the native deep pass for explicitly requested initial or broader semantic en
 Let Graft generate and cache file summaries, concept maps, and symbol-level meaning according to its own implementation.
 Do not suppress those outputs, invent per-file or per-concept value thresholds, or implement a parallel API summarizer in this skill.
 
+## Honor authorization
+
 Honor existing user authorization and provider/model preferences without asking again.
 Credentials being present do not by themselves establish authorization to transmit source or incur API charges.
 Use Graft's existing provider configuration and diagnostics; do not require API setup to perform ordinary Graft-assisted work.
 When API use requires a new user decision, identify the intended repository scope and native command, and continue unrelated work while that decision is pending.
+
+## Run a deep pass
 
 Apply the environment requirement in [Shared boundaries](../../SKILL.md#shared-boundaries) to all CLI operations, including deep builds.
 If enrichment is the first operation, use `graft map` once to enter the local refresh path.

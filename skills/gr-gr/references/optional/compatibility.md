@@ -85,6 +85,9 @@ Do not follow the printed global reinstall advice automatically; parser installa
 ## Trail-code v0.23.0
 
 The package names, command/MCP mappings, parser fallback, and learning/cloud boundaries described for [v0.22.0](#trail-code-v0220) still apply.
+
+### Map directory selection
+
 The graph schema is unchanged, but the default map directory now depends on repository state under either executable name:
 
 - An existing `.trail/cache/` takes precedence.
@@ -112,6 +115,10 @@ The existing opt-out and fallback rules remain necessary, including for upkeep i
 
 ## Evidence and verification limits
 
+This section records how each reviewed release was compared and tested, and which behavior was not exercised.
+
+### Evidence for v0.16.0 to v0.20.0
+
 The shared lifecycle was compared directly in `trailhq/Graft` tags v0.16.0 (`aa1e2bb`), v0.18.0 (`de8456e`), v0.19.0 (`597d82f`), and v0.20.0 (`80692e5`).
 `src/graph/refresh.ts`, `src/graph/seed.ts`, `src/graph/types.ts`, `src/graph/build.ts`, `src/graph/enrich.ts`, and `src/ask/index-file.ts` are unchanged between these four tags.
 The CLI dispatch, MCP tools, and Trail rule attachment were also inspected to establish the differences above.
@@ -124,12 +131,16 @@ Focused installed v0.20.0 CLI/MCP checks passed for missing-index behavior, refr
 Live Trail service operations and API-backed deep enrichment were not validated end to end.
 These observations cover the skill's workflow, not every command or integration in each release.
 
+### Evidence for v0.21.0 and v0.21.1
+
 The same lifecycle, CLI retrieval dispatch, and MCP tools were compared against official tags [v0.21.0](https://github.com/trailhq/Graft/tree/v0.21.0) (`b7646fb`) and [v0.21.1](https://github.com/trailhq/Graft/tree/v0.21.1) (`375a37e`).
 The graph, ask, context, and MCP source directories are unchanged from v0.20.0 in both tags; CLI changes concern initialization and Trail operations rather than retrieval dispatch.
 The new Trail pull, context-file patching, early upload, and compressed/chunked upload paths were inspected separately to establish the expanded side effects above.
 Selected upstream tests for refresh, seeding, graph serialization, ask indexes, MCP tools, context-file pull, and uploads passed on both tags: 97 tests on v0.21.0 and 100 on v0.21.1.
 These runs used tagged sources in temporary directories with `tsx` and locally built parser dependencies; v0.21.0 reused v0.21.1's dependencies, whose lockfile differs only in the package version.
 They were not clean installed-release CLI/MCP checks, and Trail network behavior used upstream test doubles rather than the live service.
+
+### Evidence for v0.22.0
 
 For v0.22.0, both published npm packages were installed in temporary directories and exercised through their own CLI entrypoints on Node 24.12.0.
 CLI checks confirmed the two versions, the distinct `check` help, and local graph creation.
@@ -142,6 +153,7 @@ These source tests used the temporary packages' dependencies and `tsx`, with a t
 The published-package checks and snapshot tests are separate evidence; a shared version number does not prove identical source provenance.
 Live cloud synchronization, automatic migration of a real wired checkout, and API-backed deep enrichment were not exercised end to end.
 
+### Evidence for v0.23.0
 
 For v0.23.0, the official source snapshot [ead585b](https://github.com/trailhq/Trail-Code/tree/ead585b2707055f47f1e97d9b0d4209af5285805) was compared with the reviewed v0.22.0 snapshot `3f10899`.
 The graph and MCP source directories and `src/ask/index-file.ts` are unchanged; directory resolution, query follow-up, and wiring/migration changes were inspected separately.
