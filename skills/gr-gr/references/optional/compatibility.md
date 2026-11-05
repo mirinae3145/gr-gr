@@ -71,9 +71,8 @@ Search results can include local learnings through the shared engine, even under
 - **Brand migration**: `graft upgrade` now installs the `trail` command too.
   Existing Claude-wired repositories can migrate when upkeep runs with `trail` available, including MCP startup.
   Migration can rewrite agent wiring and start a background read of past Claude sessions.
-- **Migration opt-out**: `GRAFT_NO_TRAIL_SWITCH=1` opts out of that automatic migration; it does not disable all existing wiring upkeep, telemetry, or cloud operations.
-  When migration is outside the task's authorization, use that process-local opt-out before starting a runtime that could migrate a wired repository.
-  Do not change persistent configuration as a side effect of retrieval.
+- **Migration opt-out**: The required `GRAFT_NO_TRAIL_SWITCH=1` opts out of that automatic migration.
+  It does not disable all existing wiring upkeep, telemetry, or cloud operations.
   If existing upkeep would still exceed the permitted write scope, use ordinary source reading instead.
 - **Learning reuse**: In a repository that keeps learnings, `trail ask` can refresh teammate branch data in the background.
   When a workspace is connected, it can also record reuse activity and schedule cloud synchronization.

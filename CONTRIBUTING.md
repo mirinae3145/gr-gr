@@ -22,10 +22,16 @@ Distinguish upstream's recommended setup from its available capabilities: check 
 Explain which differences remain useful and which can be simplified or removed.
 If the strategic comparison is incomplete, state that limit rather than treating compatibility as evidence of continued advantage.
 
+## Environment assumptions
+
+The README's [Required global configuration](README.md#required-global-configuration) defines user-managed setup for both active and optional workflows.
+Keep the skill's environment assumptions consistent with that setup, without duplicating its installation or verification procedure.
+Retain runtime checks for effects the required settings do not prevent.
+
 ## Active and optional workflows
 
 The default workflow is Graft CLI structural retrieval and authorized normal local builds.
-Each checkout uses its own index; keep `GRAFT_NO_SEED=1` on runtime invocations and do not substitute a main checkout's graph.
+Each checkout uses its own index; do not substitute a main checkout's graph.
 Native deep enrichment, MCP, and Trail use are preserved in the [optional bundle](skills/gr-gr/references/optional/README.md), but require an explicit request before their guidance is loaded.
 
 These capabilities and cross-checkout index seeding are disabled by default.

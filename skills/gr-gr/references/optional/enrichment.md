@@ -27,7 +27,6 @@ When API use requires a new user decision, identify the intended repository scop
 
 ## Run a deep pass
 
-Apply the environment requirement in [Shared boundaries](../../SKILL.md#shared-boundaries) to all CLI operations, including deep builds.
 If enrichment is the first operation, use `graft map` once to enter the local refresh path.
 Proceed only with a graph belonging to that checkout and no unresolved freshness failure; never use or copy the parent checkout's graph.
 Keep any runtime directory override on the build too, following [v0.23.0 directory selection](compatibility.md#trail-code-v0230) when applicable.

@@ -12,7 +12,9 @@ A normal local `graft build` can create a missing index when the request or gove
 Neither `graft init` nor `trail init` is part of this workflow.
 Existing summaries remain usable as generated context, but the skill does not write or regenerate semantic content by default.
 
+Complete the [Required global configuration](#required-global-configuration) before using the skill.
 Start with [SKILL.md](skills/gr-gr/SKILL.md), then load [Compatibility](skills/gr-gr/references/compatibility.md) and [Retrieval](skills/gr-gr/references/retrieval.md) when using Graft.
+
 The active CLI workflow supports reviewed Graft releases v0.26.0, v0.27.0, and v0.28.1.
 An unavailable, unlisted, or incompatible runtime falls back to ordinary source search without automatic upgrades.
 Modern Graft shares implementation with Trail, so the compatibility guidance retains side-effect checks even though Trail use is inactive.
@@ -32,27 +34,38 @@ The skill's motivation is to avoid repository-local agent-file generation.
 Upstream supports direct builds and queries without initialization; this skill supplies external guidance and explicit boundaries for index creation and runtime side effects.
 See [Contributing](CONTRIBUTING.md) for how changes assess both upstream compatibility and the value of this separate strategy.
 
-## Recommended global configuration
+## Required global configuration
 
-This section is user-responsibility, not AI's.
+The user must complete this setup before using the skill and maintain it for every runtime used with the skill.
+The skill assumes these prerequisites are satisfied; it does not routinely inspect or repair them.
 Use an already available, reviewed `graft` CLI; do not run either init command.
 
-Exclude both `/graft/` and `/.trail/cache/` from Git while retaining `.trail/` learnings and shared hooks.
-The examples append to an existing `core.excludesFile`, or Git's default global ignore file when that setting is absent.
-`GRAFT_NO_GITIGNORE=1` disables normal build-time ignore-file updates; it does not prevent directory migration from writing `.trail/.gitignore`.
+Set the following variables in the environment inherited by the agent and CLI, and by any explicitly enabled MCP server or Trail runtime:
 
-`GRAFT_NO_SEED=1` disables cross-checkout/worktree index seeding for queries and builds.
-It does not disable first-query builds in v0.27.0/v0.28.1; follow the index check in [Retrieval](skills/gr-gr/references/retrieval.md#access-or-create-an-authorized-index).
-After changing persistent environment settings, start a new shell and agent process so they inherit the values.
+| Variable | Required value | Effect |
+| --- | --- | --- |
+| `GRAFT_NO_GITIGNORE` | `1` | Suppresses normal build-time `.gitignore` updates |
+| `GRAFT_NO_IGNORE` | `1` | Suppresses normal build-time `.ignore` updates |
+| `GRAFT_NO_SEED` | `1` | Disables cross-checkout/worktree index seeding |
+| `GRAFT_NO_TRAIL_SWITCH` | `1` | Prevents automatic brand migration from Graft to Trail |
+
+Exclude both `/graft/` and `/.trail/cache/` from Git while retaining `.trail/` learnings and shared hooks.
+The platform examples append to an existing `core.excludesFile`, or Git's default global ignore file when that setting is absent.
+
+These settings do not prevent directory migration, all existing wiring upkeep, or cloud activity.
+They also do not prevent first-query builds in v0.27.0/v0.28.1.
+The skill retains the corresponding checks in [Compatibility](skills/gr-gr/references/compatibility.md) and [Retrieval](skills/gr-gr/references/retrieval.md).
 
 ### Linux
 
-Add below in the shell environment (e.g., `~/.profile`).
+Add these exports to the environment used to launch the agent and CLI, for example `~/.profile` for a login shell.
+For WSL, configure the Linux environment where Graft runs; Windows user variables alone do not establish these prerequisites.
 
 ```bash
 export GRAFT_NO_GITIGNORE=1
 export GRAFT_NO_IGNORE=1
 export GRAFT_NO_SEED=1
+export GRAFT_NO_TRAIL_SWITCH=1
 ```
 
 Then run:
@@ -68,6 +81,8 @@ printf '\n/graft/\n/.trail/cache/\n' >> "$gr_gr_ignore"
 
 ### Windows
 
+Run the following in PowerShell to register the global ignore entries and persistent user environment variables:
+
 ```powershell
 $grGrIgnore = git config --global --path --get core.excludesFile
 if (-not $grGrIgnore) {
@@ -80,7 +95,19 @@ Add-Content -Path $grGrIgnore -Value "`n/graft/`n/.trail/cache/"
 [Environment]::SetEnvironmentVariable("GRAFT_NO_GITIGNORE", "1", "User")
 [Environment]::SetEnvironmentVariable("GRAFT_NO_IGNORE", "1", "User")
 [Environment]::SetEnvironmentVariable("GRAFT_NO_SEED", "1", "User")
+[Environment]::SetEnvironmentVariable("GRAFT_NO_TRAIL_SWITCH", "1", "User")
 ```
+
+### Verify the setup
+
+Complete these checks once after setup and after changing the runtime launcher or its environment:
+
+1. Restart the shell, agent launcher, and any explicitly enabled MCP server so they inherit the configured values.
+1. Confirm that all four variables equal `1` in each runtime's actual environment.
+   A shell profile or persistent Windows user value alone does not prove that an already running process inherited it.
+1. Confirm that the effective global Git ignore file contains `/graft/` and `/.trail/cache/`.
+
+These prerequisites do not authorize index creation, optional capabilities, API use, or configuration changes during ordinary retrieval.
 
 ## AI assistance
 

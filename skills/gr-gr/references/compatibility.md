@@ -7,7 +7,7 @@ For an unlisted, unknown, or prerelease runtime, report the limitation once and 
 Do not start an investigation or upgrade merely to enable retrieval during unrelated work.
 
 All listed versions support query-time structural refresh and native worktree seeding.
-The active [retrieval workflow](retrieval.md) disables seeding with `GRAFT_NO_SEED=1` for queries and builds; each checkout uses its own index.
+The required environment disables seeding for the active [retrieval workflow](retrieval.md); each checkout uses its own index.
 A missing index requires an authorized local build.
 Automatic refresh does not regenerate semantic summaries or Markdown cards.
 An incompatible result or storage layout overrides this compatibility statement: stop Graft use and report the mismatch.
@@ -15,7 +15,7 @@ An incompatible result or storage layout overrides this compatibility statement:
 ## Side effects under the Graft name
 
 - **Wiring upkeep**: The `graft` executable shares implementation with Trail; disabling Trail use in the skill does not disable upstream side effects.
-  Use process-local `GRAFT_NO_TRAIL_SWITCH=1` before invoking Graft to prevent automatic brand migration.
+  The required `GRAFT_NO_TRAIL_SWITCH=1` prevents automatic brand migration.
   It does not disable all upkeep of existing agent wiring, directory migration, or network activity.
   If an already wired environment would require unrequested configuration writes, session reading, or cloud activity, use ordinary source reading instead.
   Do not repair or migrate that environment as part of retrieval.

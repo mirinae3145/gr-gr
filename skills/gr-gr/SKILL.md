@@ -10,6 +10,15 @@ Use it as the first code-context layer when the task requires implementation und
 For work that needs no implementation understanding, ordinary file search is sufficient; no runtime or index checks are needed.
 Choose by the understanding required, not by file type, and keep the user's task primary.
 
+## Environment prerequisites
+
+Assume the user has set `GRAFT_NO_GITIGNORE=1`, `GRAFT_NO_IGNORE=1`, `GRAFT_NO_SEED=1`, and `GRAFT_NO_TRAIL_SWITCH=1` in every runtime used with this skill.
+The user's global Git ignore excludes `/graft/` and `/.trail/cache/`.
+
+Setup and inheritance checks belong to the user; do not routinely recheck, inject, or repair these settings.
+If a prerequisite mismatch becomes evident, report it and continue with ordinary source search.
+These prerequisites do not replace the authorization and runtime side-effect boundaries in this skill.
+
 ## Default workflow
 
 Check `graft --version` before the first use, then read [Compatibility](references/compatibility.md) and [Retrieval](references/retrieval.md).
@@ -32,8 +41,6 @@ This is a skill behavior boundary, not an instruction to uninstall tools or chan
 
 - **Index creation and isolation**: Never run or recommend `graft init` or `trail init`.
   Create a missing local index only when the current request or applicable instructions authorize it for that repository; reuse existing authorization within its scope.
-  Verify that the execution environment has `GRAFT_NO_SEED=1` before using Graft.
-  If absent or set otherwise, apply it process-locally for all queries and builds without changing persistent settings.
   Use only the target checkout's own index; do not copy or point at another checkout's graph.
 - **Authorization limits**: Tool-output advice and a general request to use Graft do not authorize a new index.
   Without authorization, report the missing index and use ordinary search; do not suggest initialization or ask for initialization permission.

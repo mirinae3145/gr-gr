@@ -9,15 +9,14 @@ Only the `graft` CLI is active by default.
 Before retrieval, establish the checkout's index and permission to create it:
 
 1. First check the [directory migration boundary](compatibility.md#side-effects-under-the-graft-name); even path resolution can move the map and update `.trail/.gitignore`.
-   Apply the environment requirement in [Shared boundaries](../SKILL.md#shared-boundaries) before invoking Graft.
 1. On v0.27.0/v0.28.1, before the checkout's first retrieval, inspect the filesystem for `<map-dir>/.graph/wiring.json` without invoking Graft's path resolver or a query.
    Use the existing directory override when configured; otherwise determine whether `graft/` or `.trail/cache/` applies under the directory migration boundary.
    If the effective path is unclear or would require an unrequested migration, use ordinary source reading.
    If the graph is missing, apply the build-authorization rule before any query; do not let retrieval start the first build.
 1. If the filesystem check or retrieval reports no graph, check the index-creation authorization defined in [Shared boundaries](../SKILL.md#shared-boundaries).
-   When authorized for this repository, run one normal `graft build <repo-root> --no-gitignore --no-ignore` with a reviewed CLI runtime, then retry the needed retrieval.
+   When authorized for this repository, run one normal `graft build <repo-root>` with a reviewed CLI runtime, then retry the needed retrieval.
 
-   The flags suppress normal build-time ignore-file writes, but not directory migration.
+   The required environment suppresses normal build-time ignore-file writes, but not directory migration.
    Do not use either init command or add `--deep` under local-index authorization.
    If authorization is absent or creation cannot complete, explicitly tell the user which repository lacks a usable Graft index.
    In either case, continue with ordinary file search and source reading.

@@ -14,9 +14,9 @@ Read this bundle only when the user explicitly requests one of these capabilitie
 
 ## Seeding stays disabled
 
-- Cross-checkout seeding remains disabled when an optional capability is requested; historical seeding support in the retained compatibility evidence does not activate it.
-- Keep `GRAFT_NO_SEED=1` on CLI operations and any explicitly requested MCP server; do not assume an existing server inherited it.
-- If that server's seeding configuration cannot be verified, use the verified CLI or ordinary source search.
+Cross-checkout seeding remains disabled when an optional capability is requested.
+Historical seeding support in the retained compatibility evidence does not activate it.
+The skill's environment prerequisites also cover explicitly requested MCP and Trail runtimes.
 
 ## Select the guidance
 
