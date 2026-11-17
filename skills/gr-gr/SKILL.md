@@ -1,6 +1,6 @@
 ---
 name: gr-gr
-description: "Use the Graft CLI as a code-context layer for implementation understanding, symbol and call relationships, or behavior changes. Tasks needing no implementation understanding may use ordinary file search. Stop Graft use and report incompatible output or storage."
+description: "Retrieve code context through the Graft CLI. Use before reading, changing, debugging, or reviewing existing code in a repository, including locating definitions, callers, and call paths, tracing behavior, or judging a change's impact. Work that needs no implementation understanding, such as editing prose, records, or configuration, may use ordinary file search. Stop Graft use and report incompatible output or storage."
 ---
 
 # Grasp Graft
