@@ -15,10 +15,8 @@ Existing summaries remain usable as generated context, but the skill does not wr
 Complete the [Required global configuration](#required-global-configuration) before using the skill.
 Start with [SKILL.md](skills/gr-gr/SKILL.md), then load [Compatibility](skills/gr-gr/references/compatibility.md) and [Retrieval](skills/gr-gr/references/retrieval.md) when using Graft.
 
-The active CLI workflow supports reviewed Graft releases v0.26.0, v0.27.0, and v0.28.1.
 An unavailable, unlisted, or incompatible runtime falls back to ordinary source search without automatic upgrades.
 Modern Graft shares implementation with Trail, so the compatibility guidance retains side-effect checks even though Trail use is inactive.
-On v0.27.0/v0.28.1, inspect the checkout's index before querying so upstream's first-query build cannot bypass index-creation authorization.
 
 ## Optional capabilities
 
@@ -53,7 +51,7 @@ Exclude both `/graft/` and `/.trail/cache/` from Git while retaining `.trail/` l
 The platform examples append to an existing `core.excludesFile`, or Git's default global ignore file when that setting is absent.
 
 These settings do not prevent directory migration, all existing wiring upkeep, or cloud activity.
-They also do not prevent first-query builds in v0.27.0/v0.28.1.
+Some reviewed releases can still build a missing index on the first query.
 The skill retains the corresponding checks in [Compatibility](skills/gr-gr/references/compatibility.md) and [Retrieval](skills/gr-gr/references/retrieval.md).
 
 ### Linux

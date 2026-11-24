@@ -9,7 +9,7 @@ Only the `graft` CLI is active by default.
 Before retrieval, establish the checkout's index and permission to create it:
 
 1. First check the [directory migration boundary](compatibility.md#side-effects-under-the-graft-name); even path resolution can move the map and update `.trail/.gitignore`.
-1. On v0.27.0/v0.28.1, before the checkout's first retrieval, inspect the filesystem for `<map-dir>/.graph/wiring.json` without invoking Graft's path resolver or a query.
+1. If [Compatibility](compatibility.md) lists the release as capable of a first-query build, inspect the filesystem before querying for `<map-dir>/.graph/wiring.json` without invoking Graft's path resolver or a query.
    Use the existing directory override when configured; otherwise determine whether `graft/` or `.trail/cache/` applies under the directory migration boundary.
    If the effective path is unclear or would require an unrequested migration, use ordinary source reading.
    If the graph is missing, apply the build-authorization rule before any query; do not let retrieval start the first build.
